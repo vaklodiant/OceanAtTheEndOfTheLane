@@ -1,0 +1,130 @@
+* {
+  box-sizing: border-box;
+  background: none;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  width: 100vw;
+  background: linear-gradient(135deg, #0a0f1a 0%, #1a2a3a 50%, #0a1520 100%) !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  perspective: 1200px;
+}
+
+#logo-container {
+  animation: goldenFloat 8s ease-in-out infinite, goldGlow 6s ease-in-out infinite;
+  filter: 
+    drop-shadow(0 20px 60px rgba(212, 175, 55, 0.35))
+    drop-shadow(0 10px 40px rgba(255, 215, 0, 0.2))
+    drop-shadow(0 0 30px rgba(255, 235, 153, 0.15));
+  background: none !important;
+  background-color: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transform-style: preserve-3d;
+  will-change: transform, filter;
+}
+
+#logo-container svg {
+  width: 800px;
+  height: auto;
+  display: block;
+  background: none !important;
+  background-color: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  filter: url(#goldShine);
+  max-width: 90vw;
+}
+
+/* Main animation - gentle floating motion */
+@keyframes goldenFloat {
+  0%, 100% {
+    transform: translateY(0px) translateX(0px);
+  }
+  25% {
+    transform: translateY(-12px) translateX(4px);
+  }
+  50% {
+    transform: translateY(-8px) translateX(-4px);
+  }
+  75% {
+    transform: translateY(-10px) translateX(2px);
+  }
+}
+
+/* Glow pulse animation - enhanced version -->
+@keyframes goldGlow {
+  0%, 100% {
+    filter: 
+      drop-shadow(0 20px 60px rgba(212, 175, 55, 0.25))
+      drop-shadow(0 10px 40px rgba(255, 215, 0, 0.12))
+      drop-shadow(0 0 20px rgba(255, 235, 153, 0.08));
+    text-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+  }
+  50% {
+    filter: 
+      drop-shadow(0 30px 80px rgba(212, 175, 55, 0.4))
+      drop-shadow(0 15px 50px rgba(255, 215, 0, 0.25))
+      drop-shadow(0 5px 30px rgba(255, 235, 153, 0.18));
+    text-shadow: 0 0 30px rgba(212, 175, 55, 0.5), 0 0 50px rgba(255, 215, 0, 0.2);
+  }
+}
+
+/* Subtle shimmer effect */
+@keyframes shimmerWave {
+  0% {
+    background-position: -1000% 0;
+  }
+  100% {
+    background-position: 1000% 0;
+  }
+}
+
+/* 3D perspective effect on hover */
+@media (hover: hover) {
+  #logo-container:hover {
+    animation-duration: 5s, 4s;
+  }
+}
+
+/* Mobile responsiveness */
+@media (max-width: 1024px) {
+  #logo-container svg {
+    width: 600px;
+  }
+}
+
+@media (max-width: 768px) {
+  #logo-container svg {
+    width: 500px;
+  }
+  
+  @keyframes goldenFloat {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-8px);
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  #logo-container svg {
+    width: 100%;
+    max-width: 400px;
+  }
+}

@@ -1,0 +1,14 @@
+[
+  {
+    "id": 1,
+    "type": "scene",
+    "bg": "bg-underwater-pink",
+    "bookStart": 0,
+    "bookEnd": 4,
+    "video1": "video/page0/lettie01.webm",
+    "video2": "video/page0/lettie02.webm",
+    "video3": "video/page0/fish01.webm",
+    "video4": "video/page0/fish02.webm",
+    "hasClick": true
+  }
+]
