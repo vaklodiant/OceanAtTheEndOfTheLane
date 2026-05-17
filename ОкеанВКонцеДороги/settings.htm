@@ -9,9 +9,23 @@
 </head>
 
 <body class="settings-page screen">
-<div class="bg"></div> <!-- ВАЖНО -->
+<div class="bg"></div> 
 <div class="water-glass"></div>
 <div class="bubbles">
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
   <span></span>
   <span></span>
   <span></span>
@@ -60,8 +74,11 @@
 </div>
 <div class="menu-panel">
   <a href="index.html" class="menu-item">Главная</a>
+  <div class="menu-separator"></div>
   <a href="contents.html" class="menu-item">Оглавление</a>
+  <div class="menu-separator"></div>
   <a href="settings.htm" class="menu-item">Настройки</a>
+  <div class="menu-separator"></div>
   <a href="extra.html" class="menu-item">Дополнительно</a>
 </div>
 <div class="settings-container">
@@ -70,12 +87,11 @@
         <video src="video/settings.webm" class="settings-title-svg" autoplay loop muted playsinline></video>
     </div>
 
-    <!-- ИНТЕРФЕЙС -->
     <div class="settings-group">
 
 	<label class="hex-toggle">
 	  <span>Движение анимации</span>
-	  <input type="checkbox" checked>
+	  <input type="checkbox" id="toggle-animation" checked>
 
 	  <div class="hex">
 		<div class="inner-line"></div>
@@ -85,7 +101,7 @@
 
 	<label class="hex-toggle">
 	  <span>Версия для слабовидящих</span>
-	  <input type="checkbox" checked>
+	  <input type="checkbox" id="toggle-a11y">
 
 	  <div class="hex">
 		<div class="inner-line"></div>
@@ -95,7 +111,7 @@
 		
 	<label class="hex-toggle">
 	  <span>Подсказки</span>
-	  <input type="checkbox" checked>
+	  <input type="checkbox" id="toggle-hints" checked>
 
 	  <div class="hex">
 		<div class="inner-line"></div>
@@ -104,22 +120,11 @@
 	</label>
 
 	<div class="hex-slider">
-	  <label>Размер шрифта</label>
-
-	  <div class="slider-wrap">
-		<div class="slider-track"></div>
-		<input type="range" min="0" max="100" value="70">
-		<div class="fill"></div>
-	  </div>
-	</div>
-
-    <!-- ЗВУК -->
-	<div class="hex-slider">
 	  <label>Звуки</label>
 
 	  <div class="slider-wrap">
 		<div class="slider-track"></div>
-		<input type="range" min="0" max="100" value="70">
+		<input type="range" min="0" max="100" value="70" id="slider-sounds">
 		<div class="fill"></div>
 	  </div>
 	</div>
@@ -129,14 +134,10 @@
 
 	  <div class="slider-wrap">
 		<div class="slider-track"></div>
-		<input type="range" min="0" max="100" value="70">
+		<input type="range" min="0" max="100" value="70" id="slider-music">
 		<div class="fill"></div>
 	  </div>
 	</div>
-
-
-
-
 
 </div>
 
@@ -149,7 +150,9 @@
 </div>
 
 <script src="settings.js"></script>
+<script src="continue-reading.js"></script>
 <script src="ripple.js"></script>
+<script src="audio.js"></script>
 
 </body>
 </html>

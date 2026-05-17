@@ -13,8 +13,7 @@ sliders.forEach(slider => {
         const max = parseFloat(input.max) || 100;
         const val = parseFloat(input.value);
         const percent = (val - min) / (max - min);
-        
-        // учитываем padding 16px с каждой стороны
+
         const trackWidth = input.offsetWidth - 32;
         fill.style.width = (percent * trackWidth) + 'px';
 
@@ -27,12 +26,46 @@ sliders.forEach(slider => {
 
 const screen = document.body;
 
-// появление страницы
+const toggleAnimation = document.getElementById('toggle-animation');
+const toggleA11y      = document.getElementById('toggle-a11y');
+const toggleHints     = document.getElementById('toggle-hints');
+
+if (toggleAnimation) {
+  toggleAnimation.checked = localStorage.getItem('animationEnabled') !== 'false';
+}
+if (toggleA11y) {
+  toggleA11y.checked = localStorage.getItem('a11yMode') === '1';
+}
+if (toggleHints) {
+  toggleHints.checked = localStorage.getItem('hintsEnabled') !== 'false';
+}
+
+const saveBtn = document.querySelector('.btn-save .button');
+if (saveBtn) {
+  saveBtn.addEventListener('click', () => {
+    if (toggleAnimation) {
+      localStorage.setItem('animationEnabled', toggleAnimation.checked ? 'true' : 'false');
+    }
+    if (toggleHints) {
+      localStorage.setItem('hintsEnabled', toggleHints.checked ? 'true' : 'false');
+    }
+    if (toggleA11y) {
+      const prevA11y = localStorage.getItem('a11yMode') === '1';
+      const nextA11y = toggleA11y.checked;
+      localStorage.setItem('a11yMode', nextA11y ? '1' : '0');
+      if (prevA11y !== nextA11y) {
+        Object.keys(sessionStorage)
+          .filter(k => k.startsWith('bookFlowState'))
+          .forEach(k => sessionStorage.removeItem(k));
+      }
+    }
+  });
+}
+
 window.addEventListener('load', () => {
   document.body.classList.add('show');
 });
 
-// переход
 document.querySelectorAll('a').forEach(link => {
   link.addEventListener('click', function(e) {
     const href = this.getAttribute('href');
@@ -51,9 +84,11 @@ document.querySelectorAll('a').forEach(link => {
 });
 const menuBtn = document.querySelector('.menu-btn .round-button');
 
-menuBtn.addEventListener('click', () => {
-  document.body.classList.toggle('menu-open');
-});
+if (menuBtn) {
+  menuBtn.addEventListener('click', () => {
+    document.body.classList.toggle('menu-open');
+  });
+}
 
 function initializeSaveButtonShader() {
     const canvas = document.querySelector('.btn-save .btn-canvas');

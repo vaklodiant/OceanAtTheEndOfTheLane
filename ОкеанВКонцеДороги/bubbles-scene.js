@@ -1,3 +1,9 @@
+(function(){
+  const id = parseInt(new URLSearchParams(location.search).get('page'))||1;
+  fetch('content.json').then(r=>r.json()).then(pages=>{
+    const p = pages.find(x=>x.id===id);
+    if (p && p.type === 'scene') {
+
 (function () {
   const NS = 'http://www.w3.org/2000/svg';
 
@@ -44,7 +50,6 @@
     };
   }
 
-  // ---- Shared loop state ----
   const activeBubbles = [];
   let loopRunning = false;
 
@@ -52,13 +57,11 @@
     for (let i = activeBubbles.length - 1; i >= 0; i--) {
       const b = activeBubbles[i];
 
-      // Accumulate totalT (seconds since last frame)
       if (b._lastTs === null) b._lastTs = ts;
       const dt = (ts - b._lastTs) / 1000;
       b._lastTs = ts;
       b.totalT += dt;
 
-      // Honour initial delay
       if (b.startTs === null) b.startTs = ts + b._delay;
       if (ts < b.startTs) continue;
 
@@ -71,20 +74,17 @@
         continue;
       }
 
-      // Opacity envelope: fade in 0–15 %, hold 15–80 %, fade out 80–100 %
       let op;
       if      (prog < 0.15) op = (prog / 0.15) * b.maxOp;
       else if (prog < 0.80) op = b.maxOp;
       else                  op = b.maxOp * (1 - (prog - 0.80) / 0.20);
 
-      // Upward drift + slight arc
       const dy = -prog * b.travelY;
       const dx = Math.sin(prog * Math.PI * 1.3) * b.arcAmp;
 
       b.wrapper.style.transform = `translate(${dx}px,${dy}px)`;
       b.wrapper.style.opacity   = op.toFixed(3);
 
-      // Blob morph
       if (b.morphStart === null) b.morphStart = ts;
       const mp = Math.min((ts - b.morphStart) / b.morphDur, 1);
       b.path.setAttribute('d', interpolatePath(b.shapeFrom, b.shapeTo, ease(mp)));
@@ -115,7 +115,6 @@
     const cw = container.offsetWidth  || 200;
     const ch = container.offsetHeight || 300;
 
-    // ~30 % chance of a tiny bubble, rest small
     const w   = Math.random() < 0.30 ? rand(3, 7) : rand(8, 18);
     const h   = w * rand(0.78, 1.22);
     const pad = 10;
@@ -162,7 +161,6 @@
       morphStart: null, morphDur: rand(2000, 4000),
       shapeFrom, shapeTo,
       off, totalT, rx, ry, cx, cy,
-      // internal bookkeeping (not in the public state but needed by the loop)
       _container: container,
       _delay: delay,
       _lastTs: null,
@@ -181,15 +179,12 @@
     const cover = document.querySelector('.cover');
     if (!cover) return;
 
-    // Below Lettie — lower-left area
     const leftZone = createZone('left:2%;top:46%;width:26%;height:48%;', 0);
-    // Next to logo — centre-right, mid screen
     const rightZone = createZone('left:54%;top:17%;width:27%;height:43%;', 3);
 
     cover.appendChild(leftZone);
     cover.appendChild(rightZone);
 
-    // Stagger initial spawns so scene fills in naturally
     for (let i = 0; i < 4; i++) spawnBubble(leftZone,  rand(0, 6000));
     for (let i = 0; i < 3; i++) spawnBubble(rightZone, rand(0, 6000));
   }
@@ -199,4 +194,8 @@
   } else {
     initBubbles();
   }
+})();
+
+    }
+  });
 })();

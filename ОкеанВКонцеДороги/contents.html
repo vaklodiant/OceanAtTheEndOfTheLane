@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Оглавление</title>
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="loader.css">
+<script>!function(){var e=document.createElement('div');e.id='global-loader';e.setAttribute('aria-hidden','true');e.innerHTML='<div class="gl-rings"><div class="gl-ring"></div><div class="gl-ring"></div><div class="gl-ring"></div></div>';document.documentElement.appendChild(e)}()</script>
+<style>
+body.contents-page {
+  background-size: 120% 120%;
+  position: relative;
+  overflow: hidden;
+  animation: waterBg 20s ease-in-out infinite;
+  font-family: serif;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 5vh;
+  box-sizing: border-box;
+}
+
+body.contents-page .bg {
+  background: radial-gradient(
+    ellipse at 0% 0%,
+    #DFDFF4 0%,
+    #90B0CB 27%,
+    #57799A 55%,
+    #4D5579 83%,
+    #1E3956 96%
+  );
+  filter: brightness(0.72) saturate(1.55);
+}
+
+body.contents-page.screen::after {
+  backdrop-filter: blur(0px);
+  -webkit-backdrop-filter: blur(0px);
+  background: rgba(10, 20, 50, 0.3);
+  transition: opacity 0.5s ease, backdrop-filter 0.5s ease, -webkit-backdrop-filter 0.5s ease;
+  z-index: 10;
+}
+
+body.contents-page.screen.menu-open::after {
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+}
+
+/* Main container */
+.contents-container {
+  position: relative;
+  z-index: 3;
+  width: 97%;
+  max-width: 1280px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+/* Title */
+.contents-title-wrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 0.25rem;
+}
+
+.contents-title-svg {
+  height: 100px;
+  width: auto;
+  filter:
+    drop-shadow(0 0 14px rgba(140, 210, 255, 0.45))
+    drop-shadow(0 0 6px rgba(214, 168, 90, 0.3));
+}
+
+/* Carousel layout */
+.toc-carousel {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.1rem;
+  margin-top: 3vh;
+}
+
+.carousel-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+}
+
+.carousel-viewport {
+  overflow: hidden;
+  flex: 1;
+}
+
+/* Grid stack: all pages occupy the same cell; crossfade via opacity */
+.carousel-track {
+  display: grid;
+  width: 100%;
+}
+
+.carousel-page {
+  grid-column: 1;
+  grid-row: 1;
+  display: flex;
+  gap: 1.875rem;
+  padding: 2.4rem 0.5rem 0.75rem 22px; /* left room for title image overflow */
+  box-sizing: border-box;
+  opacity: 0;
+  transition: opacity 0.45s ease;
+  pointer-events: none;
+  user-select: none;
+}
+
+.carousel-page.active {
+  opacity: 1;
+  pointer-events: auto;
+  user-select: auto;
+}
+
+/* Arch card */
+.arch-card {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+}
+
+.arch-card--empty {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.arch-window {
+  position: relative;
+  width: 82%;
+  aspect-ratio: 4 / 7;
+  overflow: visible; /* allow tall arch tips to extend above card top */
+}
+
+/* Layer 1 – tall arch outlines (below solid fill) */
+.arch-tall-arches {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: visible;
+}
+
+/* Layer 2 – crystal fill */
+.arch-bg {
+  position: absolute;
+  inset: 0;
+  clip-path: url(#arch-shape);
+  background: radial-gradient(
+    ellipse at 42% 38%,
+    #416a82 0%,
+    #3E7292 25%,
+    #254c69 58%,
+    #1C3E5C 100%
+  );
+}
+
+.arch-bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: conic-gradient(
+    from 0deg at 50% 45%,
+    rgba(255,255,255,0.18),
+    rgba(160,205,245,0.14),
+    rgba(0,0,0,0.06),
+    rgba(255,255,255,0.18),
+    rgba(130,190,235,0.14),
+    rgba(0,0,0,0.20),
+    rgba(0,0,0,0.10),
+    rgba(255,255,255,0.18)
+  );
+  filter: blur(12px);
+  mix-blend-mode: overlay;
+}
+
+/* Layer 2.5 – illustration image (screen blend) */
+.arch-illus-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  clip-path: url(#arch-shape);
+  mix-blend-mode: screen;
+}
+
+/* Layer 3 – glass border + shine SVG */
+.arch-frame-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: visible;
+}
+
+/* Layer 4 – roman numeral (hidden: title PNGs already label each card) */
+.arch-label {
+  display: none;
+}
+
+/* Layer 5 – gold diamond at apex */
+.arch-diamond {
+  position: absolute;
+  left: 50%;
+  /* apex of arch-frame-svg path is at y=2 out of 175 viewBox units */
+  top: calc(2 / 175 * 100%);
+  width: 10px;
+  height: 10px;
+  transform: translate(-50%, -50%) rotate(45deg);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow:
+    0 0 10px rgba(255, 215, 160, 0.8),
+    inset 0 0 4px rgba(255, 255, 255, 0.8);
+  /* same gradient + animation as .diamond in settings.html */
+  background: linear-gradient(
+    105deg,
+    #d48ab5 0%, #ffedd5 40%, #b35ad6 50%, #FFF6D5 60%, #d48ab5 100%
+  );
+  background-size: 300% 100%;
+  animation: goldSheen 10s linear infinite;
+  animation-delay: var(--shimmer-delay, 0s);
+  z-index: 5;
+  pointer-events: none;
+}
+
+.arch-diamond::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url('./textures/gold.png');
+  background-size: 600px auto;
+  animation: moveGold 80s linear infinite;
+  opacity: 0.5;
+}
+
+/* Layer: static glint highlight spot */
+.arch-glint {
+  position: absolute;
+  inset: 0;
+  clip-path: url(#arch-shape);
+  pointer-events: none;
+  z-index: 3;
+  background: radial-gradient(
+    circle at 35% 28%,
+    rgba(255,255,255,0.42),
+    transparent 48%
+  );
+  mix-blend-mode: screen;
+}
+
+/* Layer: animated shine sweep */
+.arch-shine {
+  position: absolute;
+  inset: 0;
+  clip-path: url(#arch-shape);
+  pointer-events: none;
+  z-index: 4;
+  background: linear-gradient(
+    80deg,
+    transparent 25%,
+    rgba(255,255,255,0.26) 48%,
+    rgba(255,255,255,0.10) 54%,
+    transparent 72%
+  );
+  background-size: 350% 100%;
+  background-position: 210% 0;
+  animation: archShine 18s ease-in-out infinite;
+  animation-delay: var(--shimmer-delay, 0s);
+  mix-blend-mode: screen;
+}
+
+@keyframes archShine {
+  0%   { background-position: 210% 0; }
+  45%  { background-position: -110% 0; }
+  100% { background-position: 210% 0; }
+}
+
+/* Bottom gradient overlay — blue-tinted, darkens lower third for title readability */
+.arch-bottom-overlay {
+  position: absolute;
+  inset: 0;
+  clip-path: url(#arch-shape);
+  pointer-events: none;
+  z-index: 5;
+  background: linear-gradient(
+    to bottom,
+    rgba(10,35,90,0) 50%,
+    rgba(10,35,90,0.42) 100%
+  );
+}
+
+.arch-bottom-overlay::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(10,35,90,0) 50%,
+    rgba(10,35,90,0.28) 100%
+  );
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.arch-card:hover .arch-bottom-overlay::after {
+  opacity: 1;
+}
+
+/* Chapter title image — bottom-left, overflows arch left edge slightly */
+.arch-title-img {
+  position: absolute;
+  bottom: 2%;
+  left: -15px;
+  height: 65px;
+  width: auto;
+  opacity: 1;
+  pointer-events: none;
+  z-index: 7;
+  transition: opacity 0.35s ease;
+}
+
+.arch-card:hover .arch-title-img {
+  opacity: 1;
+}
+
+/* Navigation arrows */
+.carousel-arrow {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  filter:
+    drop-shadow(0 0 8px rgba(140, 200, 255, 0.55))
+    drop-shadow(0 0 3px rgba(100, 170, 255, 0.35));
+  transition: filter 0.3s ease, opacity 0.3s ease;
+}
+
+.carousel-arrow img {
+  height: 60px;
+  width: auto;
+  display: block;
+}
+
+.carousel-arrow:hover:not(:disabled) {
+  filter:
+    drop-shadow(0 0 14px rgba(140, 210, 255, 0.85))
+    drop-shadow(0 0 5px rgba(100, 180, 255, 0.6));
+}
+
+.carousel-arrow:disabled {
+  opacity: 0.25;
+  cursor: default;
+}
+
+/* Dots */
+.carousel-dots {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 1px;
+  transform: rotate(45deg);
+  background: rgba(200, 169, 122, 0.22);
+  border: 1px solid rgba(200, 169, 122, 0.42);
+  cursor: pointer;
+  transition: background 0.3s, transform 0.3s, width 0.3s, height 0.3s;
+  display: block;
+}
+
+.dot.active {
+  width: 9px;
+  height: 9px;
+  background: rgba(200, 169, 122, 0.8);
+  transform: rotate(45deg);
+}
+</style>
+</head>
+
+<body class="contents-page screen">
+
+<div class="bg"></div>
+<div class="water-glass"></div>
+<div class="bubbles">
+  <span></span><span></span><span></span><span></span><span></span>
+  <span></span><span></span><span></span><span></span><span></span>
+  <span></span><span></span><span></span><span></span><span></span>
+  <span></span><span></span><span></span><span></span><span></span>
+</div>
+
+<div class="rays">
+  <svg width="2056" height="1526" viewBox="0 0 2056 1526" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <g class="ray-group">
+      <path d="M1626.52 5.96662L54.8225 1020.26L8.94439 1169.72L1707.07 4.72865L1626.52 5.96662Z" fill="white" fill-opacity="0.35"/>
+      <path d="M1900.76 14.7172L1727.2 17.3845L38.7224 1188.84L11.8802 1360.74L1900.76 14.7172Z" fill="white" fill-opacity="0.35"/>
+      <path d="M5.1488 922.759L1485.43 66.82L1463.84 67.1518L4.54067 883.19L5.1488 922.759Z" fill="white" fill-opacity="0.35"/>
+      <path d="M723.847 1409.34C1003.29 1071.67 1997.38 79.008 2005.11 73.1781L2013.69 107.476L870.102 1462.68L723.847 1409.34Z" fill="white" fill-opacity="0.35"/>
+      <path d="M951.839 1484.11L2022.03 140.158L2049.6 159.793L1032.8 1520.33L951.839 1484.11Z" fill="white" fill-opacity="0.35"/>
+    </g>
+  </svg>
+</div>
+
+<div class="decor">
+  <img src="images/corner-top-right.png" class="corner-top-right">
+  <img src="images/corner-bottom-left.png" class="corner-bottom-left">
+  <img src="images/ornament-line.png" class="decor-line">
+</div>
+
+<div class="corals-left-bg"><img src="./svg/corals-left.svg" alt="" aria-hidden="true"></div>
+<div class="corals-right-bg"><img src="./svg/corals-right.svg" alt="" aria-hidden="true"></div>
+
+<div class="menu-btn">
+  <div class="round-button-wrap btn-menu">
+    <div class="round-glow" aria-hidden="true"></div>
+    <div class="round-button">
+      <div class="round-bubble" aria-hidden="true"></div>
+      <div class="round-grad-dotted" aria-hidden="true"></div>
+      <img class="round-frame" src="./svg/decorative frame.svg" alt="" aria-hidden="true">
+      <div class="round-gold-border" aria-hidden="true"></div>
+      <div class="round-shell" aria-hidden="true">
+        <img class="round-shell-base" src="./svg/small-shell.svg" alt="">
+        <div class="round-shell-gold"></div>
+      </div>
+      <img class="round-lines" src="./svg/small-lines.svg" alt="" aria-hidden="true">
+      <span class="round-text">Меню</span>
+    </div>
+  </div>
+</div>
+
+<div class="menu-panel">
+  <a href="index.html" class="menu-item">Главная</a>
+  <div class="menu-separator"></div>
+  <a href="contents.html" class="menu-item">Оглавление</a>
+  <div class="menu-separator"></div>
+  <a href="settings.htm" class="menu-item">Настройки</a>
+  <div class="menu-separator"></div>
+  <a href="extra.html" class="menu-item">Дополнительно</a>
+</div>
+
+<svg aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden;pointer-events:none">
+  <defs>
+    <clipPath id="arch-shape" clipPathUnits="objectBoundingBox">
+      <path d="M0,1 L0,0.446 C0,0.046 0.5,0 0.5,0 C0.5,0 1,0.046 1,0.446 L1,1 Z"/>
+    </clipPath>
+  </defs>
+</svg>
+
+<div class="contents-container">
+  <div class="contents-title-wrap">
+    <video src="video/contents.webm" class="contents-title-svg" autoplay loop muted playsinline></video>
+  </div>
+
+  <div class="toc-carousel">
+    <div class="carousel-row">
+      <button class="carousel-arrow" id="prevBtn" aria-label="Назад"><img src="images/arrow-left.png" alt="" aria-hidden="true"></button>
+      <div class="carousel-viewport">
+        <div class="carousel-track" id="carouselTrack"></div>
+      </div>
+      <button class="carousel-arrow" id="nextBtn" aria-label="Вперёд"><img src="images/arrow-right.png" alt="" aria-hidden="true"></button>
+    </div>
+    <div class="carousel-dots" id="carouselDots"></div>
+  </div>
+</div>
+
+<script>
+const CHAPTERS = [
+  { label: 'Пролог',     roman: 'Пролог',  page: 2,   titleImg: 'prologue.png' },
+  { label: 'Глава I',    roman: 'I',        page: 7,   titleImg: '1.png'        },
+  { label: 'Глава II',   roman: 'II',       page: 11,  titleImg: '2.png'        },
+  { label: 'Глава III',  roman: 'III',      page: 19,  titleImg: '3.png'        },
+  { label: 'Глава IV',   roman: 'IV',       page: 27,  titleImg: '4.png'        },
+  { label: 'Глава V',    roman: 'V',        page: 34,  titleImg: '5.png'        },
+  { label: 'Глава VI',   roman: 'VI',       page: 36,  titleImg: '6.png'        },
+  { label: 'Глава VII',  roman: 'VII',      page: 44,  titleImg: '7.png'        },
+  { label: 'Глава VIII', roman: 'VIII',     page: 49,  titleImg: '8.png'        },
+  { label: 'Глава IX',   roman: 'IX',       page: 59,  titleImg: '9.png'        },
+  { label: 'Глава X',    roman: 'X',        page: 68,  titleImg: '10.png'       },
+  { label: 'Глава XI',   roman: 'XI',       page: 78,  titleImg: '11.png'       },
+  { label: 'Глава XII',  roman: 'XII',      page: 84,  titleImg: '12.png'       },
+  { label: 'Глава XIII', roman: 'XIII',     page: 90,  titleImg: '13.png'       },
+  { label: 'Глава XIV',  roman: 'XIV',      page: 96,  titleImg: '14.png'       },
+  { label: 'Глава XV',   roman: 'XV',       page: 104, titleImg: '15.png'       },
+  { label: 'Эпилог',     roman: 'Эпилог',  page: 108, titleImg: 'epilogue.png' },
+];
+
+const PER_PAGE = 4;
+const pages = [];
+for (let i = 0; i < CHAPTERS.length; i += PER_PAGE) {
+  pages.push(CHAPTERS.slice(i, i + PER_PAGE));
+}
+
+const track    = document.getElementById('carouselTrack');
+const dotsEl   = document.getElementById('carouselDots');
+const prevBtn  = document.getElementById('prevBtn');
+const nextBtn  = document.getElementById('nextBtn');
+let current = 0;
+
+let _cardIdx = 0;
+function buildCard(ch) {
+  const idx = _cardIdx++;
+  const shimmerDelay = ((idx * 1.4) % 9).toFixed(1);
+  const card = document.createElement('div');
+  card.className = 'arch-card';
+  if (ch.page) {
+    card.style.cursor = 'pointer';
+    card.addEventListener('click', () => {
+      window.AudioManager?.playSound('music/sounds/toggler.mp3');
+      const href = `chapter.html?page=${ch.page}`;
+      document.body.classList.remove('show');
+      document.body.classList.add('hide');
+      window.GlobalLoader?.show();
+      window.AudioManager?.fadeMusicOut(650);
+      setTimeout(() => { window.location.href = href; }, 700);
+    });
+  }
+  card.innerHTML = `
+    <div class="arch-window">
+
+      <svg class="arch-tall-arches" viewBox="0 0 100 175" preserveAspectRatio="none"
+           aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          
+          <pattern id="gp${idx}" patternUnits="userSpaceOnUse"
+                   x="0" y="0" width="600" height="400">
+            <image href="./textures/gold.png" x="0" y="0" width="600" height="400"
+                   preserveAspectRatio="xMidYMid slice"/>
+            <animateTransform attributeName="patternTransform" type="translate"
+                              from="0 0" to="600 0" dur="120s" repeatCount="indefinite"/>
+          </pattern>
+          
+          <mask id="tm${idx}">
+            <rect x="-5" y="-32" width="110" height="88" fill="white"/>
+          </mask>
+        </defs>
+        <g mask="url(#tm${idx})">
+          
+          <path d="M2,175 L2,79 C2,-6 50,-13 50,-13 C50,-13 98,-6 98,79 L98,175"
+                fill="none" stroke="url(#gp${idx})" stroke-width="1.2"
+                vector-effect="non-scaling-stroke"/>
+          
+          <path d="M2,175 L2,79 C2,1 50,-6 50,-6 C50,-6 98,1 98,79 L98,175"
+                fill="none" stroke="url(#gp${idx})" stroke-width="1.2"
+                vector-effect="non-scaling-stroke" opacity="0.6"/>
+        </g>
+      </svg>
+
+      <div class="arch-bg"></div>
+
+      <svg class="arch-illus-svg" viewBox="0 0 100 175" preserveAspectRatio="xMidYMid slice"
+           aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+        <image href="images/contents/${ch.titleImg}"
+               x="0" y="0" width="100" height="175"
+               preserveAspectRatio="xMidYMid slice"/>
+      </svg>
+
+      <svg class="arch-frame-svg" viewBox="0 0 100 175" preserveAspectRatio="none"
+           aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          
+          <linearGradient id="gg${idx}" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%"   stop-color="rgb(195,228,255)" stop-opacity="0.52"/>
+            <stop offset="28%"  stop-color="rgb(255,255,255)" stop-opacity="0.18"/>
+            <stop offset="58%"  stop-color="rgb(35,65,110)"   stop-opacity="0.32"/>
+            <stop offset="100%" stop-color="rgb(93,139,184)"  stop-opacity="0.26"/>
+          </linearGradient>
+          
+          <linearGradient id="sg${idx}" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%"   stop-color="white" stop-opacity="0.12"/>
+            <stop offset="42%"  stop-color="white" stop-opacity="0.03"/>
+            <stop offset="100%" stop-color="white" stop-opacity="0"/>
+          </linearGradient>
+          
+          <clipPath id="ac${idx}" clipPathUnits="userSpaceOnUse">
+            <path d="M2,175 L2,79 C2,8 50,2 50,2 C50,2 98,8 98,79 L98,175 Z"/>
+          </clipPath>
+        </defs>
+
+        <path d="M2,175 L2,79 C2,8 50,2 50,2 C50,2 98,8 98,79 L98,175"
+              fill="none"
+              stroke="url(#gg${idx})" stroke-width="12"
+              stroke-linejoin="round"
+              vector-effect="non-scaling-stroke"/>
+
+        <path d="M2,175 L2,79 C2,8 50,2 50,2 C50,2 98,8 98,79 L98,175 Z"
+              fill="url(#sg${idx})" clip-path="url(#ac${idx})"/>
+      </svg>
+
+      <div class="arch-glint"></div>
+
+      <div class="arch-shine" style="--shimmer-delay:${shimmerDelay}s"></div>
+
+      <div class="arch-label">${ch.roman}</div>
+
+      <div class="arch-bottom-overlay"></div>
+
+      <img class="arch-title-img" src="images/titles/${ch.titleImg}" alt="${ch.label}">
+
+      <div class="arch-diamond" style="--shimmer-delay:${shimmerDelay}s"></div>
+
+    </div>`;
+  return card;
+}
+
+pages.forEach((pageChapters, pi) => {
+  const pageEl = document.createElement('div');
+  pageEl.className = 'carousel-page';
+
+  for (let i = 0; i < PER_PAGE; i++) {
+    if (pageChapters[i]) {
+      pageEl.appendChild(buildCard(pageChapters[i]));
+    } else {
+      const empty = document.createElement('div');
+      empty.className = 'arch-card arch-card--empty';
+      pageEl.appendChild(empty);
+    }
+  }
+  track.appendChild(pageEl);
+
+  const dot = document.createElement('span');
+  dot.className = 'dot' + (pi === 0 ? ' active' : '');
+  dot.addEventListener('click', () => goTo(pi));
+  dotsEl.appendChild(dot);
+});
+
+function goTo(page) {
+  current = Math.max(0, Math.min(pages.length - 1, page));
+  track.querySelectorAll('.carousel-page').forEach((p, i) =>
+    p.classList.toggle('active', i === current));
+  dotsEl.querySelectorAll('.dot').forEach((d, i) =>
+    d.classList.toggle('active', i === current));
+  prevBtn.disabled = current === 0;
+  nextBtn.disabled = current === pages.length - 1;
+}
+
+prevBtn.addEventListener('click', () => goTo(current - 1));
+nextBtn.addEventListener('click', () => goTo(current + 1));
+
+window.addEventListener('load', () => {
+  document.body.classList.add('show');
+  goTo(0);
+});
+
+document.querySelector('.menu-btn .round-button').addEventListener('click', () => {
+  document.body.classList.toggle('menu-open');
+});
+
+document.querySelectorAll('a').forEach(link => {
+  link.addEventListener('click', function(e) {
+    const href = this.getAttribute('href');
+    if (!href || href.startsWith('#')) return;
+    e.preventDefault();
+    if (/chapter\.html/i.test(href)) {
+      window.AudioManager?.fadeMusicOut(700);
+    }
+    document.body.classList.remove('show');
+    document.body.classList.add('hide');
+    setTimeout(() => { window.location.href = href; }, 800);
+  });
+});
+</script>
+<script src="continue-reading.js"></script>
+<script src="ripple.js"></script>
+<script src="audio.js"></script>
+<script src="loader.js"></script>
+</body>
+</html>

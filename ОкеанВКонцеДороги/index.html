@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <title>Главный экран</title>
 <link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="loader.css">
+<script>!function(){var e=document.createElement('div');e.id='global-loader';e.setAttribute('aria-hidden','true');e.innerHTML='<div class="gl-rings"><div class="gl-ring"></div><div class="gl-ring"></div><div class="gl-ring"></div></div>';document.documentElement.appendChild(e)}()</script>
 <script>if (!sessionStorage.getItem('introShown')) document.documentElement.classList.add('show-intro');</script>
 </head>
 <body>
@@ -18,7 +20,7 @@
         <li>Лучший опыт — в полноэкранном режиме (F11)</li>
         <li>⚠ Мигающие изображения и световые эффекты</li>
         <li>⚠ Сцены умеренной жестокости и психологического напряжения</li>
-        <li>⚠ Рекомендуется от 13 лет</li>
+        <li>⚠ Рекомендуется от 12 лет</li>
       </ul>
       <p class="intro-warnings__note">Проект содержит видеоанимации — на слабых устройствах возможны замедления.</p>
     </div>
@@ -27,11 +29,29 @@
 </div>
 
 <div class="loader">
-  <div class="loader__bubble"></div>
+  <div class="gl-rings">
+    <div class="gl-ring"></div>
+    <div class="gl-ring"></div>
+    <div class="gl-ring"></div>
+  </div>
 </div>
 
 <div class="screen">
 <div class="bubbles">
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
   <span></span>
   <span></span>
   <span></span>
@@ -123,7 +143,6 @@
         </svg>
     </div>
 
- 
 	<div class="girl block">
         <div class="float girl-float">
             <video class="girl-video" autoplay loop muted playsinline id="lettieVideo">
@@ -138,8 +157,6 @@
         </video>
     </div>
 
-
-
 	<div class="house block">
 		<div class="float house-float">
 			<video class="house-video" id="houseVideo" autoplay loop muted playsinline>
@@ -149,8 +166,11 @@
 
 		<div class="menu-panel">
 		  <a href="index.html" class="menu-item">Главная</a>
+		  <div class="menu-separator"></div>
 		  <a href="contents.html" class="menu-item">Оглавление</a>
+		  <div class="menu-separator"></div>
 		  <a href="settings.htm" class="menu-item">Настройки</a>
+		  <div class="menu-separator"></div>
 		  <a href="extra.html" class="menu-item">Дополнительно</a>
 		</div>
 
@@ -176,14 +196,36 @@
 
 </div>
 
+<div class="resume-overlay" id="resumeOverlay" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="resume-dialog">
+    <p class="resume-dialog__text">Продолжить с момента,<br>где остановились?</p>
+    <div class="resume-dialog__buttons">
+      <div class="button-wrap btn-resume btn-resume-no" id="resumeNo">
+        <div class="button">
+          <div class="border border-1"></div>
+          <span class="text">Нет</span>
+        </div>
+      </div>
+      <div class="button-wrap btn-resume btn-resume-yes" id="resumeYes">
+        <div class="button">
+          <div class="border border-1"></div>
+          <span class="text">Да</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/three@0.158/build/three.min.js"></script>
+<script src="continue-reading.js"></script>
 <script src="script.js"></script>
-<script src="main.js"></script>
 <script src="bubbles-scene.js"></script>
 <script src="ripple.js"></script>
+<script src="audio.js"></script>
 <script>
   document.getElementById('logoWmVideo').playbackRate = 0.6;
   document.getElementById('houseVideo').playbackRate = 0.7;
 </script>
+<script src="loader.js"></script>
 </body>
 </html>

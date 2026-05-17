@@ -1,12 +1,7 @@
 (function () {
-  // Selectors that should get ripple effect
-  // .button and .round-button already have overflow:hidden
-  // .chapter-nav__prev/next and .btn-save get overflow:hidden via CSS
   const SELECTORS = [
     '.button',
     '.round-button',
-    '.chapter-nav__prev',
-    '.chapter-nav__next',
     '.btn-save .button',
   ].join(', ');
 
