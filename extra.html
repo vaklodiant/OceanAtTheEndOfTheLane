@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Дополнительно</title>
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="loader.css">
+<script>!function(){var e=document.createElement('div');e.id='global-loader';e.setAttribute('aria-hidden','true');e.innerHTML='<div class="gl-rings"><div class="gl-ring"></div><div class="gl-ring"></div><div class="gl-ring"></div></div>';document.documentElement.appendChild(e)}()</script>
+<style>
+body.extra-page {
+  background-size: 120% 120%;
+  position: relative;
+  overflow: hidden;
+  animation: waterBg 20s ease-in-out infinite;
+  font-family: serif;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 5vh;
+  box-sizing: border-box;
+}
+
+body.extra-page .bg {
+  background: radial-gradient(
+    circle at -30% -20%,
+    #7f8caf 0%,
+    #e7e7f9 25%,
+    #536ba1 50%,
+    #414577 75%,
+    #161440 100%
+  );
+  filter: brightness(0.71) saturate(1.58);
+}
+
+body.extra-page.screen::after {
+  backdrop-filter: blur(0px);
+  -webkit-backdrop-filter: blur(0px);
+  background: rgba(45, 72, 103, 0.3);
+  transition: opacity 0.5s ease, backdrop-filter 0.5s ease, -webkit-backdrop-filter 0.5s ease;
+  z-index: 10;
+}
+
+body.extra-page.screen.menu-open::after {
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+}
+
+/* Main container */
+.extra-container {
+  position: relative;
+  z-index: 3;
+  width: 80%;
+  max-width: 880px;
+  height: 90vh;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* Title */
+.extra-title-wrap {
+  display: flex;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.extra-title-svg {
+  height: 100px;
+  width: auto;
+  filter:
+    drop-shadow(0 0 14px rgba(180, 160, 255, 0.45))
+    drop-shadow(0 0 6px rgba(214, 168, 90, 0.3));
+}
+
+/* ---- Tab header ---- */
+.extra-tabs {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.extra-tabs-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  flex-shrink: 0;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid rgba(200, 169, 122, 0.18);
+  margin-bottom: 1.25rem;
+}
+
+.tab-btn {
+  background: none;
+  border: none;
+  font-family: "Palatino Linotype", Palatino, serif;
+  font-size: clamp(14px, 1.4vw, 18px);
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.45);
+  padding: 0 0.2rem 0.35rem;
+  border-bottom: 2px solid transparent;
+  transition: color 0.3s, border-color 0.3s;
+  position: relative;
+}
+
+.tab-btn.active {
+  color: #c8a97a;
+  border-bottom-color: #c8a97a;
+}
+
+.tab-btn:not(.active):hover {
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.tab-sep {
+  color: rgba(200, 169, 122, 0.35);
+  font-size: 10px;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.35rem;
+}
+
+/* ---- Tab panels ---- */
+.extra-tabs-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.extra-tabs-body::-webkit-scrollbar {
+  width: 3px;
+}
+
+.extra-tabs-body::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 2px;
+}
+
+.extra-tabs-body::-webkit-scrollbar-thumb {
+  background: rgba(200, 169, 122, 0.38);
+  border-radius: 2px;
+}
+
+.tab-panel {
+  display: none;
+}
+
+.tab-panel.active {
+  display: block;
+}
+
+/* ---- Tab 1: Об авторе ---- */
+.about-layout {
+  display: flex;
+  gap: 2.5rem;
+  align-items: flex-start;
+}
+
+.portrait-wrap {
+  flex-shrink: 0;
+  width: 200px;
+}
+
+.portrait-frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  box-shadow:
+    0 0 0 1px rgba(200, 169, 122, 0.48),
+    0 0 0 6px rgba(0, 0, 0, 0),
+    0 0 0 7px rgba(200, 169, 122, 0.22);
+  overflow: hidden;
+}
+
+.portrait-frame::before,
+.portrait-frame::after {
+  content: '';
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.portrait-frame::before {
+  top: -1px;
+  left: -1px;
+  border-top: 1px solid rgba(200, 169, 122, 0.7);
+  border-left: 1px solid rgba(200, 169, 122, 0.7);
+}
+
+.portrait-frame::after {
+  bottom: -1px;
+  right: -1px;
+  border-bottom: 1px solid rgba(200, 169, 122, 0.7);
+  border-right: 1px solid rgba(200, 169, 122, 0.7);
+}
+
+.portrait-placeholder {
+  width: 100%;
+  height: 100%;
+  background: rgba(20, 30, 70, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.portrait-placeholder svg {
+  opacity: 0.18;
+}
+
+.portrait-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.portrait-caption {
+  margin-top: 0.6rem;
+  font-family: "Palatino Linotype", Palatino, serif;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(200, 169, 122, 0.55);
+  text-align: center;
+}
+
+.bio-text {
+  color: rgba(230, 236, 255, 0.88);
+  font-family: "Palatino Linotype", Palatino, serif;
+  font-size: clamp(14px, 1.35vw, 17px);
+  line-height: 1.75;
+  margin: 0;
+  flex: 1;
+}
+
+.bio-dropcap {
+  float: left;
+  font-size: 4.2em;
+  line-height: 0.76;
+  padding-right: 0.1em;
+  padding-top: 0.04em;
+  color: #c8a97a;
+  font-family: "Palatino Linotype", Palatino, serif;
+  font-style: italic;
+}
+
+/* ---- Tab 2: Заметки ---- */
+.notes-body {
+  max-width: 680px;
+  margin: 0 auto;
+  color: rgba(230, 236, 255, 0.82);
+  font-family: "Palatino Linotype", Palatino, serif;
+  font-size: clamp(14px, 1.3vw, 16.5px);
+  line-height: 1.8;
+}
+
+.notes-body p {
+  margin: 0 0 1.3em;
+  text-indent: 1.5em;
+}
+
+.notes-body p:first-child {
+  text-indent: 0;
+}
+
+.notes-divider {
+  text-align: center;
+  color: rgba(200, 169, 122, 0.45);
+  letter-spacing: 0.6em;
+  font-size: 10px;
+  margin: 1.5em 0;
+  user-select: none;
+}
+
+/* ---- Tab 3: Арт-бук ---- */
+.artbook-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.1rem;
+}
+
+.art-card {
+  border: 1px solid rgba(200, 169, 122, 0.28);
+  background: rgba(10, 18, 50, 0.3);
+  transition: background 0.3s, border-color 0.3s;
+  cursor: default;
+  display: flex;
+  flex-direction: column;
+}
+
+.art-card:hover {
+  background: rgba(10, 18, 50, 0.52);
+  border-color: rgba(200, 169, 122, 0.55);
+}
+
+.art-img-wrap {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+}
+
+.art-img-placeholder {
+  width: 100%;
+  height: 100%;
+  background: rgba(20, 28, 65, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: filter 0.3s;
+}
+
+.art-card:hover .art-img-placeholder {
+  filter: brightness(0.78);
+}
+
+.art-img-placeholder svg {
+  opacity: 0.14;
+}
+
+.art-card-info {
+  padding: 0.6rem 0.7rem 0.65rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.18rem;
+}
+
+.art-label {
+  font-family: "Palatino Linotype", Palatino, serif;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #c8a97a;
+}
+
+.art-caption {
+  font-family: "Palatino Linotype", Palatino, serif;
+  font-size: clamp(11px, 1vw, 13px);
+  color: rgba(220, 228, 255, 0.65);
+  line-height: 1.35;
+}
+</style>
+</head>
+
+<body class="extra-page screen">
+
+<div class="bg"></div>
+<div class="water-glass"></div>
+<div class="bubbles">
+  <span></span><span></span><span></span><span></span><span></span>
+  <span></span><span></span><span></span><span></span><span></span>
+  <span></span><span></span><span></span><span></span><span></span>
+  <span></span><span></span><span></span><span></span><span></span>
+</div>
+
+<div class="rays">
+  <svg width="2056" height="1526" viewBox="0 0 2056 1526" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <g class="ray-group">
+      <path d="M1626.52 5.96662L54.8225 1020.26L8.94439 1169.72L1707.07 4.72865L1626.52 5.96662Z" fill="white" fill-opacity="0.35"/>
+      <path d="M1900.76 14.7172L1727.2 17.3845L38.7224 1188.84L11.8802 1360.74L1900.76 14.7172Z" fill="white" fill-opacity="0.35"/>
+      <path d="M5.1488 922.759L1485.43 66.82L1463.84 67.1518L4.54067 883.19L5.1488 922.759Z" fill="white" fill-opacity="0.35"/>
+      <path d="M723.847 1409.34C1003.29 1071.67 1997.38 79.008 2005.11 73.1781L2013.69 107.476L870.102 1462.68L723.847 1409.34Z" fill="white" fill-opacity="0.35"/>
+      <path d="M951.839 1484.11L2022.03 140.158L2049.6 159.793L1032.8 1520.33L951.839 1484.11Z" fill="white" fill-opacity="0.35"/>
+    </g>
+  </svg>
+</div>
+
+<div class="decor">
+  <img src="images/corner-top-right.png" class="corner-top-right">
+  <img src="images/corner-bottom-left.png" class="corner-bottom-left">
+  <img src="images/ornament-line.png" class="decor-line">
+</div>
+
+<div class="corals-left-bg"><img src="./svg/corals-left.svg" alt="" aria-hidden="true"></div>
+<div class="corals-right-bg"><img src="./svg/corals-right.svg" alt="" aria-hidden="true"></div>
+
+<div class="menu-btn">
+  <div class="round-button-wrap btn-menu">
+    <div class="round-glow" aria-hidden="true"></div>
+    <div class="round-button">
+      <div class="round-bubble" aria-hidden="true"></div>
+      <div class="round-grad-dotted" aria-hidden="true"></div>
+      <img class="round-frame" src="./svg/decorative frame.svg" alt="" aria-hidden="true">
+      <div class="round-gold-border" aria-hidden="true"></div>
+      <div class="round-shell" aria-hidden="true">
+        <img class="round-shell-base" src="./svg/small-shell.svg" alt="">
+        <div class="round-shell-gold"></div>
+      </div>
+      <img class="round-lines" src="./svg/small-lines.svg" alt="" aria-hidden="true">
+      <span class="round-text">Меню</span>
+    </div>
+  </div>
+</div>
+
+<div class="menu-panel">
+  <a href="index.html" class="menu-item">Главная</a>
+  <div class="menu-separator"></div>
+  <a href="contents.html" class="menu-item">Оглавление</a>
+  <div class="menu-separator"></div>
+  <a href="settings.htm" class="menu-item">Настройки</a>
+  <div class="menu-separator"></div>
+  <a href="extra.html" class="menu-item">Дополнительно</a>
+</div>
+
+<div class="extra-container">
+  <div class="extra-title-wrap">
+    <video src="video/extra.webm" class="extra-title-svg" autoplay loop muted playsinline></video>
+  </div>
+
+  <div class="extra-tabs">
+    
+    <div class="extra-tabs-header" role="tablist">
+      <button class="tab-btn active" data-tab="about" role="tab" aria-selected="true">Об авторе</button>
+      <span class="tab-sep" aria-hidden="true">&#9670;</span>
+      <button class="tab-btn" data-tab="notes" role="tab" aria-selected="false">Заметки</button>
+      <span class="tab-sep" aria-hidden="true">&#9670;</span>
+      <button class="tab-btn" data-tab="artbook" role="tab" aria-selected="false">Арт-бук</button>
+    </div>
+
+    <div class="extra-tabs-body">
+
+      <div class="tab-panel active" id="panel-about" role="tabpanel">
+        <div class="about-layout">
+          <div class="portrait-wrap">
+            <div class="portrait-frame">
+              <img src="./images/author.png" alt="Нил Гейман" class="portrait-image">
+            </div>
+            <p class="portrait-caption">Автор</p>
+          </div>
+          <p class="bio-text">
+            <span class="bio-dropcap">Н</span>
+            ил Гейман — британский писатель, автор романов, графических романов и сценариев. Его произведения переведены на десятки языков.
+              Он получил множество наград, включая премии Хьюго, Небьюла и Британскую премию фэнтези.
+            <br><br>
+            «Океан в конце дороги» — один из самых личных его текстов, написанный после смерти отца.
+             В нём он хотел исследовать тему памяти, детства и того, как прошлое живёт внутри нас.
+             <br><br>
+Роман затрагивает темы поиска себя и «разрыва между детством и взрослой жизнью».
+
+В 2013 году роман был признан лучшей книгой по версии British Book Awards.          </p>
+        </div>
+
+        <div class="notes-divider" style="margin: 2.2rem 0;">&#9670; &nbsp; &#9670; &nbsp; &#9670;</div>
+
+        <div class="about-layout">
+          <div class="portrait-wrap">
+            <div class="portrait-frame">
+              <div class="portrait-placeholder">
+              <img src="./images/illustrator.png" alt="София Шумакова-Коровкина" class="portrait-image">
+              </div>
+            </div>
+            <p class="portrait-caption">Иллюстратор</p>
+          </div>
+          <p class="bio-text">
+            <span class="bio-dropcap">С</span>
+            офия Шумакова-Коровкина, студентка четвёртого курса Санкт-Петербургского государственного университета промышленных технологий и дизайна, кафедра цифровых и аддитивных технологий, направление «Прикладная информатика в дизайне».
+            <br><br>
+              Данный проект является выпускной квалификационной работой. Все иллюстрации, анимации и программная реализация выполнены автором самостоятельно.
+              <br><br>
+              «Океан в конце дороги» — одна из тех книг, которые остаются с тобой. История про то, как детство живёт внутри нас — даже когда мы уже давно выросли и забыли. Именно это ощущение я старалась передать через каждую иллюстрацию.
+          </p>
+        </div>
+      </div>
+
+      <div class="tab-panel" id="panel-notes" role="tabpanel">
+        <div class="notes-body">
+          <p>
+            Книгу вы только что прочли. Дело сделано. Мы дошли до благодарностей. Сказать по правде, они не часть книги. И читать их не обязательно. В основном это лишь имена.
+
+Семья в этой книге — не моя семья, а мои родственники великодушно позволили мне разграбить уголок нашего детства, и следили за тем, как я без особого стеснения переделываю знакомые места, вставляя их в сюжет. Я благодарен им всем, в особенности своей младшей сестре Лиззи, которая поддерживала меня и посылала давно забытые и подстегивающие память снимки (жаль, я вовремя не вспомнил старую теплицу, чтобы и ее вставить в книгу).
+
+Я должен поблагодарить очень и очень многих: тех, кто был рядом в нужную минуту, тех, кто приносил чай, тех, кто написал книги, на которых я вырос. Выделять кого-то из них глупо, и все же… 
+          </p>
+          <p>
+           
+          Закончив книгу, я отослал ее многим друзьям на читку, и они читали придирчивым взглядом, отмечая, что работает, а что нуждается в доработке. Я благодарен им всем, но в особенности я должен сказать спасибо Марии Давана Хедли, Олге Нуньес, Алине Симон (королеве заголовков), Гэри К. Вульфу, Кэт Ховард, Келли МакКаллоу, Эрику Сассмену, Хейли Кэмпбелл, Вале Дудич-Лупеску, Мелиссе Марр, Элиз Маршалл, Энтони Мартиньетти, Питеру Страубу, Кэт Деннинге, Джину Вулфу, Гвенде Бонд, Энн Бобби, Ли Барнетту («Попугайчику»), Моррису Шамаху, Фаре Мендельсон, Генри Селику, Клэр Кони, Грейс Монк и Корнелии Функе.
+
+Начало этому роману, хотя тогда я не знал, что он дорастет до такого, было положено, когда Джонатан Стрэн попросил меня написать рассказ. Я начал писать про добытчика опалов и Хэмпстоков (которые жили на ферме у меня в голове уже столько времени), и Джонатан великодушно простил меня, когда я в конце концов признался себе и ему, что это совсем не рассказ, и позволил истории стать романом.
+
+В Сарасоте, штат Флорида, Стивен Кинг напомнил мне, какое это счастье — просто писать каждый день. Иногда слова спасают нам жизнь. Тори предоставила мне дом, чтобы я мог спокойно писать, и я безмерно ей благодарен.
+
+Арт Шпигельман любезно позволил мне взять эпиграфом к книге слова Мориса Сендака из их разговора, опубликованного в «Нью-йоркере».
+
+И переделывая книгу во второй раз, и набирая на компьютере первый рукописный черновик, я читал вечером в постели этот дневной отрывок своей жене Аманде и, вот так читая ей вслух, узнал о написанных мною словах куда больше, чем когда-либо. Она была первым читателем книги, и ее замешательство, вопросы и удовольствие вели меня сквозь последующие черновые дебри, (Я написал эту книгу для Аманды, когда она была далеко и я очень скучал. Без нее моя жизнь была бы более серой и унылой.)
+
+Мои дочки Холли, Мэдди и сын Майкл — самые мудрые и добрые критики на свете.
+ </p>
+ <p>
+          У меня прекрасные издатели по обе стороны Атлантики: Дженнифер Брел, Джейн Морпет и Розмари Броснан, они прочли первый черновик книги, и каждая отметила что-то, что нужно было исправить, отладить и переделать. Джейн и Дженнифер отлично скооперировались, когда книга неожиданно подоспела — неожиданно для нас всех, включая меня.
+
+Я хочу сказать огромное спасибо комитету по организации лекций в память Зены Сазерленд в Чикагской публичной библиотеке: я провел там лекцию в 2012 г., и сейчас, по прошествии времени, мне ясно, что в основном это была беседа с самим собой о том, как писалась эта книга, попытка понять, что и для кого я пишу.
+
+Вот уже двадцать пять лет, как Меррили Хейфец — мой литературный агент. Ее помощь в подготовке этой книги, как и вообще любой другой моей книги на протяжении последней четверти века, поистине неоценима. Джон Левин, мой агент по киноделам, — замечательный чтец и строит недовольные гримасы а-ля Ринго Старр.
+
+Добрые твиттеряне очень выручили меня, когда понадобилось выяснить, сколько стоили лакричные тянучки «Черный Джек» и фруктовые жевательные конфеты в 1960-е гг. Без них я бы писал эту книгу вдвое дольше.
+ </p>
+            <br><br>
+ <p>
+          А в завершение я хочу поблагодарить Хэмпстоков, которые так или иначе, но всегда были рядом, когда я в них очень нуждался.
+
+          </p>
+          <div class="notes-divider">&#9670; &nbsp; &#9670; &nbsp; &#9670;</div>
+          <p>
+Нил Гейман.
+
+Остров Скай.
+
+Июль 2012 г.          </p>
+          <p>
+Эта книга — чистый вымысел. Все персонажи, события и диалоги — не более чем плод авторского воображения и не имеют отношения к реальности. Любое сходство с реальными событиями и людьми, ныне здравствующими или мертвыми, является совершенно случайным.
+          </p>
+          <div class="notes-divider">&#9670; &nbsp; &#9670; &nbsp; &#9670;</div>
+        </div>
+      </div>
+
+      <div class="tab-panel" id="panel-artbook" role="tabpanel">
+        <div class="artbook-grid" id="artbookGrid"></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+const tabBtns  = document.querySelectorAll('.tab-btn');
+const tabPanels = document.querySelectorAll('.tab-panel');
+
+tabBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    const target = btn.dataset.tab;
+    tabBtns.forEach(b => { b.classList.remove('active'); b.setAttribute('aria-selected', 'false'); });
+    tabPanels.forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    btn.setAttribute('aria-selected', 'true');
+    document.getElementById('panel-' + target).classList.add('active');
+  });
+});
+
+const ART_ITEMS = [
+  { label: 'Пролог',    caption: 'Берег у заката' },
+  { label: 'Глава I',   caption: 'День рождения' },
+  { label: 'Глава II',  caption: 'Старый дом' },
+  { label: 'Глава III', caption: 'Первый шторм' },
+  { label: 'Глава IV',  caption: 'Лесная тропа' },
+  { label: 'Глава V',   caption: 'Маяк' },
+  { label: 'Глава VI',  caption: 'Встреча' },
+  { label: 'Глава VII', caption: 'Под водой' },
+  { label: 'Глава VIII','caption': 'Возвращение' },
+];
+
+const grid = document.getElementById('artbookGrid');
+
+ART_ITEMS.forEach(item => {
+  const card = document.createElement('div');
+  card.className = 'art-card';
+  card.innerHTML = `
+    <div class="art-img-wrap">
+      <div class="art-img-placeholder">
+        <svg width="44" height="38" viewBox="0 0 44 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="1" y="1" width="42" height="36" rx="1" stroke="white" stroke-width="1.2"/>
+          <circle cx="13" cy="13" r="5" stroke="white" stroke-width="1.2"/>
+          <path d="M1 26 L12 16 L20 23 L28 14 L43 28" stroke="white" stroke-width="1.2" fill="none" stroke-linejoin="round"/>
+        </svg>
+      </div>
+    </div>
+    <div class="art-card-info">
+      <span class="art-label">${item.label}</span>
+      <span class="art-caption">${item.caption}</span>
+    </div>`;
+  grid.appendChild(card);
+});
+
+/* ---- Page init ---- */
+window.addEventListener('load', () => {
+  document.body.classList.add('show');
+});
+
+document.querySelector('.menu-btn .round-button').addEventListener('click', () => {
+  document.body.classList.toggle('menu-open');
+});
+
+document.querySelectorAll('a').forEach(link => {
+  link.addEventListener('click', function(e) {
+    const href = this.getAttribute('href');
+    if (!href || href.startsWith('#')) return;
+    e.preventDefault();
+    if (/chapter\.html/i.test(href)) {
+      window.AudioManager?.fadeMusicOut(700);
+    }
+    document.body.classList.remove('show');
+    document.body.classList.add('hide');
+    setTimeout(() => { window.location.href = href; }, 800);
+  });
+});
+</script>
+<script src="continue-reading.js"></script>
+<script src="ripple.js"></script>
+<script src="audio.js"></script>
+<script src="loader.js"></script>
+</body>
+</html>

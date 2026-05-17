@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Настройки</title>
+<link rel="stylesheet" href="styles.css">
+<script src="https://cdn.jsdelivr.net/npm/three@0.158/build/three.min.js"></script>
+</head>
+
+<body class="settings-page screen">
+<div class="bg"></div> 
+<div class="water-glass"></div>
+<div class="bubbles">
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+</div>
+
+<div class="rays">
+    <svg width="2056" height="1526" viewBox="0 0 2056 1526" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g class="ray-group">
+        <path d="M1626.52 5.96662L54.8225 1020.26L8.94439 1169.72L1707.07 4.72865L1626.52 5.96662Z" fill="white" fill-opacity="0.35"/>
+        <path d="M1900.76 14.7172L1727.2 17.3845L38.7224 1188.84L11.8802 1360.74L1900.76 14.7172Z" fill="white" fill-opacity="0.35"/>
+        <path d="M5.1488 922.759L1485.43 66.82L1463.84 67.1518L4.54067 883.19L5.1488 922.759Z" fill="white" fill-opacity="0.35"/>
+        <path d="M723.847 1409.34C1003.29 1071.67 1997.38 79.008 2005.11 73.1781L2013.69 107.476L870.102 1462.68L723.847 1409.34Z" fill="white" fill-opacity="0.35"/>
+        <path d="M951.839 1484.11L2022.03 140.158L2049.6 159.793L1032.8 1520.33L951.839 1484.11Z" fill="white" fill-opacity="0.35"/>
+        </g>
+    </svg>
+</div>
+
+<div class="decor">
+    <img src="images/corner-top-right.png" class="corner-top-right">
+    <img src="images/corner-bottom-left.png" class="corner-bottom-left">
+    <img src="images/ornament-line.png" class="decor-line">
+</div>
+
+<div class="corals-left-bg"><img src="./svg/corals-left.svg" alt="" aria-hidden="true"></div>
+<div class="corals-right-bg"><img src="./svg/corals-right.svg" alt="" aria-hidden="true"></div>
+
+<div class="menu-btn">
+<div class="round-button-wrap btn-menu">
+  <div class="round-glow" aria-hidden="true"></div>
+  <div class="round-button">
+    <div class="round-bubble" aria-hidden="true"></div>
+    <div class="round-grad-dotted" aria-hidden="true"></div>
+    <img class="round-frame" src="./svg/decorative frame.svg" alt="" aria-hidden="true">
+    <div class="round-gold-border" aria-hidden="true"></div>
+    <div class="round-shell" aria-hidden="true">
+      <img class="round-shell-base" src="./svg/small-shell.svg" alt="">
+      <div class="round-shell-gold"></div>
+    </div>
+    <img class="round-lines" src="./svg/small-lines.svg" alt="" aria-hidden="true">
+    <span class="round-text">Меню</span>
+  </div>
+</div>
+</div>
+<div class="menu-panel">
+  <a href="index.html" class="menu-item">Главная</a>
+  <div class="menu-separator"></div>
+  <a href="contents.html" class="menu-item">Оглавление</a>
+  <div class="menu-separator"></div>
+  <a href="settings.htm" class="menu-item">Настройки</a>
+  <div class="menu-separator"></div>
+  <a href="extra.html" class="menu-item">Дополнительно</a>
+</div>
+<div class="settings-container">
+
+    <div class="settings-title-wrap">
+        <video src="video/settings.webm" class="settings-title-svg" autoplay loop muted playsinline></video>
+    </div>
+
+    <div class="settings-group">
+
+	<label class="hex-toggle">
+	  <span>Движение анимации</span>
+	  <input type="checkbox" id="toggle-animation" checked>
+
+	  <div class="hex">
+		<div class="inner-line"></div>
+		<div class="diamond" style="--shimmer-delay: 0s"></div>
+	  </div>
+	</label>
+
+	<label class="hex-toggle">
+	  <span>Версия для слабовидящих</span>
+	  <input type="checkbox" id="toggle-a11y">
+
+	  <div class="hex">
+		<div class="inner-line"></div>
+		<div class="diamond" style="--shimmer-delay: 1.4s"></div>
+	  </div>
+	</label>
+		
+	<label class="hex-toggle">
+	  <span>Подсказки</span>
+	  <input type="checkbox" id="toggle-hints" checked>
+
+	  <div class="hex">
+		<div class="inner-line"></div>
+		<div class="diamond" style="--shimmer-delay: 2.8s"></div>
+	  </div>
+	</label>
+
+	<div class="hex-slider">
+	  <label>Звуки</label>
+
+	  <div class="slider-wrap">
+		<div class="slider-track"></div>
+		<input type="range" min="0" max="100" value="70" id="slider-sounds">
+		<div class="fill"></div>
+	  </div>
+	</div>
+
+	<div class="hex-slider">
+	  <label>Фоновая музыка</label>
+
+	  <div class="slider-wrap">
+		<div class="slider-track"></div>
+		<input type="range" min="0" max="100" value="70" id="slider-music">
+		<div class="fill"></div>
+	  </div>
+	</div>
+
+</div>
+
+<div class="button-wrap btn-save">
+<div class="button">
+  <canvas class="btn-canvas"></canvas>
+  <div class="border border-1"></div>
+  <span class="text">Сохранить</span>
+</div>
+</div>
+
+<script src="settings.js"></script>
+<script src="continue-reading.js"></script>
+<script src="ripple.js"></script>
+<script src="audio.js"></script>
+
+</body>
+</html>

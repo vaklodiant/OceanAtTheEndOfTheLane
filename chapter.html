@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Глава</title>
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="loader.css">
+<script>!function(){var e=document.createElement('div');e.id='global-loader';e.setAttribute('aria-hidden','true');e.innerHTML='<div class="gl-rings"><div class="gl-ring"></div><div class="gl-ring"></div><div class="gl-ring"></div></div>';document.documentElement.appendChild(e)}()</script>
+</head>
+<body class="chapter-page">
+
+<canvas id="wave-canvas"></canvas>
+
+<div class="screen">
+<div class="bubbles">
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+</div>
+
+<div class="ch8-drip" aria-hidden="true">
+  <div class="drip__drop"></div><div class="drip__drop"></div><div class="drip__drop"></div>
+  <div class="drip__drop"></div><div class="drip__drop"></div><div class="drip__drop"></div>
+  <div class="drip__drop"></div><div class="drip__drop"></div><div class="drip__drop"></div>
+  <div class="drip__drop"></div><div class="drip__drop"></div><div class="drip__drop"></div>
+  <div class="drip__drop"></div><div class="drip__drop"></div><div class="drip__drop"></div>
+  <div class="drip__drop"></div><div class="drip__drop"></div><div class="drip__drop"></div>
+</div>
+
+<div class="butterflies" aria-hidden="true">
+  <div class="butterfly b1"><span class="b-rot"><img src="./svg/ch1/butterfly1.svg" alt=""></span></div>
+  <div class="butterfly b2"><span class="b-rot"><img src="./svg/ch1/butterfly2.svg" alt=""></span></div>
+</div>
+
+<div class="menu-btn">
+<div class="round-button-wrap btn-menu">
+  <div class="round-glow" aria-hidden="true"></div>
+  <div class="round-button">
+    <div class="round-bubble" aria-hidden="true"></div>
+    <div class="round-grad-dotted" aria-hidden="true"></div>
+    <img class="round-frame" src="./svg/decorative frame.svg" alt="" aria-hidden="true">
+    <div class="round-gold-border" aria-hidden="true"></div>
+    <div class="round-shell" aria-hidden="true">
+      <img class="round-shell-base" src="./svg/small-shell.svg" alt="">
+      <div class="round-shell-gold"></div>
+    </div>
+    <img class="round-lines" src="./svg/small-lines.svg" alt="" aria-hidden="true">
+    <span class="round-text">Меню</span>
+  </div>
+</div>
+</div>
+
+<div class="chapter-menu-panel">
+  <a href="index.html" class="menu-item">Главная</a>
+  <a href="contents.html" class="menu-item">Оглавление</a>
+  <a href="settings.htm" class="menu-item">Настройки</a>
+  <a href="extra.html" class="menu-item">Дополнительно</a>
+</div>
+
+<div class="chapter-bg"></div>
+<div class="chapter-glow"></div>
+
+<div class="chapter-text chapter-text--left"></div>
+<div class="chapter-text chapter-text--right"></div>
+
+<div class="chapter-nav">
+  <button class="chapter-nav__prev" aria-label="Назад"><img src="images/arrow-left.png" alt="" aria-hidden="true"></button>
+  <button class="chapter-nav__next" aria-label="Вперёд"><img src="images/arrow-right.png" alt="" aria-hidden="true"></button>
+</div>
+
+<div class="chapter-loader"></div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.158/build/three.min.js"></script>
+<script src="bubbles-scene.js"></script>
+<script src="menu.js"></script>
+<script src="ripple.js"></script>
+<script src="audio.js"></script>
+<script src="chapter.js"></script>
+<script src="loader.js"></script>
+</body>
+</html>

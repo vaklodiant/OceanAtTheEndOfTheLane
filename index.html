@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Главный экран</title>
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="loader.css">
+<script>!function(){var e=document.createElement('div');e.id='global-loader';e.setAttribute('aria-hidden','true');e.innerHTML='<div class="gl-rings"><div class="gl-ring"></div><div class="gl-ring"></div><div class="gl-ring"></div></div>';document.documentElement.appendChild(e)}()</script>
+<script>if (!sessionStorage.getItem('introShown')) document.documentElement.classList.add('show-intro');</script>
+</head>
+<body>
+
+<div class="intro-screen">
+  <div class="intro-content">
+    <p class="intro-genre">Интерактивная иллюстрированная книга</p>
+    <div class="intro-warnings">
+      <p class="intro-warnings__heading">Перед началом</p>
+      <ul class="intro-warnings__list">
+        <li>Рекомендуются наушники</li>
+        <li>Лучший опыт — в полноэкранном режиме (F11)</li>
+        <li>⚠ Мигающие изображения и световые эффекты</li>
+        <li>⚠ Сцены умеренной жестокости и психологического напряжения</li>
+        <li>⚠ Рекомендуется от 12 лет</li>
+      </ul>
+      <p class="intro-warnings__note">Проект содержит видеоанимации — на слабых устройствах возможны замедления.</p>
+    </div>
+  </div>
+  <p class="intro-hint">нажмите, чтобы продолжить</p>
+</div>
+
+<div class="loader">
+  <div class="gl-rings">
+    <div class="gl-ring"></div>
+    <div class="gl-ring"></div>
+    <div class="gl-ring"></div>
+  </div>
+</div>
+
+<div class="screen">
+<div class="bubbles">
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+</div>
+
+	<div class="water block">
+		<img src="images/water-shape.svg" class="water-shape">
+	</div>
+    
+    <div class="logo-wm block">
+        <video autoplay loop muted playsinline id="logoWmVideo">
+            <source src="video/ocean.webm" type="video/webm">
+        </video>
+    </div>
+
+    <div class="start-btn block">
+        <div class="button-wrap btn-start">
+        <div class="side-frame" aria-hidden="true"></div>
+
+        <div class="button">
+<canvas class="btn-canvas"></canvas>        <div class="big-shell" aria-hidden="true">
+      <img class="big-shell-base" src="./svg/big-shell.svg" alt="">
+      <div class="big-shell-gold"></div>
+      <div class="big-shell-shimmer"></div>
+        </div>
+         <img class="decor-lines" src="./svg/decorative-lines.svg" alt="" aria-hidden="true">
+
+    <div class="border border-1"></div>
+    <div class="border border-2"></div>
+
+    <span class="text">Начать историю</span>
+    </div>
+    </div>
+</div>
+
+<div class="menu-btn">
+<div class="round-button-wrap btn-menu">
+  <div class="round-glow" aria-hidden="true"></div>
+  <div class="round-button">
+    <div class="round-bubble" aria-hidden="true"></div>
+    <div class="round-grad-dotted" aria-hidden="true"></div>
+    <img class="round-frame" src="./svg/decorative frame.svg" alt="" aria-hidden="true">
+    <div class="round-gold-border" aria-hidden="true"></div>
+    <div class="round-shell" aria-hidden="true">
+      <img class="round-shell-base" src="./svg/small-shell.svg" alt="">
+      <div class="round-shell-gold"></div>
+    </div>
+    <img class="round-lines" src="./svg/small-lines.svg" alt="" aria-hidden="true">
+    <span class="round-text">Меню</span>
+  </div>
+</div>
+</div>
+
+<div class="decor">
+    <img src="images/corner-top-right.png" class="corner-top-right">
+    <img src="images/corner-bottom-left.png" class="corner-bottom-left">
+    <img src="images/ornament-line.png" class="decor-line">	
+</div>
+<div class="waterweeds-bg">
+    <img src="./svg/waterweeds.svg" alt="" aria-hidden="true">
+</div>
+
+<div class="wavesdecor-bg">
+    <img src="./svg/wavesdecor.svg" alt="" aria-hidden="true">
+</div>
+
+<div class="corals-left-bg">
+    <img src="./svg/corals-left.svg" alt="" aria-hidden="true">
+</div>
+
+<div class="corals-right-bg">
+    <img src="./svg/corals-right.svg" alt="" aria-hidden="true">
+</div>
+
+<div class="cover">
+
+    <div class="rays">
+        <svg width="2056" height="1526" viewBox="0 0 2056 1526" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g class="ray-group">
+            <path d="M1626.52 5.96662L54.8225 1020.26L8.94439 1169.72L1707.07 4.72865L1626.52 5.96662Z" fill="white" fill-opacity="0.35"/>
+            <path d="M1900.76 14.7172L1727.2 17.3845L38.7224 1188.84L11.8802 1360.74L1900.76 14.7172Z" fill="white" fill-opacity="0.35"/>
+            <path d="M5.1488 922.759L1485.43 66.82L1463.84 67.1518L4.54067 883.19L5.1488 922.759Z" fill="white" fill-opacity="0.35"/>
+            <path d="M723.847 1409.34C1003.29 1071.67 1997.38 79.008 2005.11 73.1781L2013.69 107.476L870.102 1462.68L723.847 1409.34Z" fill="white" fill-opacity="0.35"/>
+            <path d="M951.839 1484.11L2022.03 140.158L2049.6 159.793L1032.8 1520.33L951.839 1484.11Z" fill="white" fill-opacity="0.35"/>
+            </g>
+        </svg>
+    </div>
+
+	<div class="girl block">
+        <div class="float girl-float">
+            <video class="girl-video" autoplay loop muted playsinline id="lettieVideo">
+                <source src="video/lettie2.webm" type="video/webm">
+            </video>
+        </div>
+    </div>
+
+    <div class="logo block">
+        <video class="logo-float" autoplay loop muted playsinline>
+            <source src="logo.webm" type="video/webm">
+        </video>
+    </div>
+
+	<div class="house block">
+		<div class="float house-float">
+			<video class="house-video" id="houseVideo" autoplay loop muted playsinline>
+				<source src="video/HouseMenu.webm" type="video/webm">
+			</video>
+		</div>
+
+		<div class="menu-panel">
+		  <a href="index.html" class="menu-item">Главная</a>
+		  <div class="menu-separator"></div>
+		  <a href="contents.html" class="menu-item">Оглавление</a>
+		  <div class="menu-separator"></div>
+		  <a href="settings.htm" class="menu-item">Настройки</a>
+		  <div class="menu-separator"></div>
+		  <a href="extra.html" class="menu-item">Дополнительно</a>
+		</div>
+
+	</div>
+
+	<div class="house-gradient-fade"></div>
+	
+    <div class="fish fish-1 block">
+        <div class="float fish-float">
+            <video class="fish-video" autoplay loop muted playsinline>
+                <source src="video/fish.webm" type="video/webm">
+            </video>
+        </div>
+    </div>
+
+    <div class="fish fish-2 block">
+        <div class="float fish-float">
+            <video class="fish-video fish-2-video" autoplay loop muted playsinline>
+                <source src="video/fish-second.webm" type="video/webm">
+            </video>
+        </div>
+    </div>
+
+</div>
+
+<div class="resume-overlay" id="resumeOverlay" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="resume-dialog">
+    <p class="resume-dialog__text">Продолжить с момента,<br>где остановились?</p>
+    <div class="resume-dialog__buttons">
+      <div class="button-wrap btn-resume btn-resume-no" id="resumeNo">
+        <div class="button">
+          <div class="border border-1"></div>
+          <span class="text">Нет</span>
+        </div>
+      </div>
+      <div class="button-wrap btn-resume btn-resume-yes" id="resumeYes">
+        <div class="button">
+          <div class="border border-1"></div>
+          <span class="text">Да</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.158/build/three.min.js"></script>
+<script src="continue-reading.js"></script>
+<script src="script.js"></script>
+<script src="bubbles-scene.js"></script>
+<script src="ripple.js"></script>
+<script src="audio.js"></script>
+<script>
+  document.getElementById('logoWmVideo').playbackRate = 0.6;
+  document.getElementById('houseVideo').playbackRate = 0.7;
+</script>
+<script src="loader.js"></script>
+</body>
+</html>
