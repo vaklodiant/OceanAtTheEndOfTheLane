@@ -146,7 +146,7 @@
   let isEpilogueTransitioning = false;
   let epilogueNextStart = null;
   const epiloguePageStarts = new Map();
-  const flowStateStorageKey = 'bookFlowState.v24';
+  const flowStateStorageKey = 'bookFlowState.v25';
 
   function mapToObject(map) {
     const obj = {};
@@ -694,6 +694,8 @@
   async function populatePrologueText(prologuePage) {
     textLeft.innerHTML = '';
     textRight.innerHTML = '';
+    textLeft.style.paddingTop = '';
+    textRight.style.paddingTop = '';
     textRight.style.display = '';
     document.body.classList.add('prologue-page');
     document.body.classList.toggle('prologue-opening', Boolean(prologuePage.showTitle));
@@ -870,6 +872,8 @@
 
     textLeft.innerHTML = '';
     textRight.innerHTML = '';
+    textLeft.style.paddingTop = '';
+    textRight.style.paddingTop = '';
     textRight.style.display = '';
     document.body.classList.add('chapter1-page');
     document.body.classList.toggle('chapter1-opening', Boolean(chapterPage.showTitle));
@@ -936,6 +940,8 @@
   async function populateChapterTwoText(chapterPage, startOverride = null) {
     textLeft.innerHTML = '';
     textRight.innerHTML = '';
+    textLeft.style.paddingTop = '';
+    textRight.style.paddingTop = '';
     textRight.style.display = '';
     document.body.classList.add('chapter2-page');
     document.body.classList.toggle('chapter2-opening', Boolean(chapterPage.showTitle));
@@ -1283,6 +1289,8 @@
   async function populateChapterThreeText(chapterPage, startOverride = null) {
     textLeft.innerHTML = '';
     textRight.innerHTML = '';
+    textLeft.style.paddingTop = '';
+    textRight.style.paddingTop = '';
     textRight.style.display = '';
     document.body.classList.add('chapter3-page');
     document.body.classList.toggle('chapter3-opening', Boolean(chapterPage.showTitle));
@@ -1521,6 +1529,8 @@
   async function populateChapterFourText(chapterPage, startOverride = null) {
     textLeft.innerHTML = '';
     textRight.innerHTML = '';
+    textLeft.style.paddingTop = '';
+    textRight.style.paddingTop = '';
     textRight.style.display = '';
     screen.querySelectorAll('.ch4-decor').forEach(el => el.remove());
     document.body.classList.add('chapter4-page');
@@ -1683,6 +1693,8 @@
   async function populateChapterFiveText(chapterPage, startOverride = null) {
     textLeft.innerHTML = '';
     textRight.innerHTML = '';
+    textLeft.style.paddingTop = '';
+    textRight.style.paddingTop = '';
     textRight.style.display = '';
     document.body.classList.add('chapter5-page');
     document.body.classList.toggle('chapter5-opening', Boolean(chapterPage.showTitle));
@@ -1866,6 +1878,8 @@
   async function populateChapterSixText(chapterPage, startOverride = null) {
     textLeft.innerHTML = '';
     textRight.innerHTML = '';
+    textLeft.style.paddingTop = '';
+    textRight.style.paddingTop = '';
     textRight.style.display = '';
     document.body.classList.add('chapter6-page');
     document.body.classList.toggle('chapter6-opening', Boolean(chapterPage.showTitle));
@@ -2047,6 +2061,8 @@
   async function populateChapterSevenText(chapterPage, startOverride = null) {
     textLeft.innerHTML = '';
     textRight.innerHTML = '';
+    textLeft.style.paddingTop = '';
+    textRight.style.paddingTop = '';
     textRight.style.display = '';
     document.body.classList.add('chapter7-page');
     document.body.classList.toggle('chapter7-opening', Boolean(chapterPage.showTitle));
@@ -2272,6 +2288,8 @@
 
     textLeft.innerHTML = '';
     textRight.innerHTML = '';
+    textLeft.style.paddingTop = '';
+    textRight.style.paddingTop = '';
     textRight.style.display = '';
     document.body.classList.add('chapter8-page');
     document.body.classList.toggle('chapter8-opening', Boolean(chapterPage.showTitle));
@@ -2568,6 +2586,8 @@
 
     textLeft.innerHTML = '';
     textRight.innerHTML = '';
+    textLeft.style.paddingTop = '';
+    textRight.style.paddingTop = '';
     textRight.style.display = '';
     document.body.classList.add('chapter9-page');
     document.body.classList.toggle('chapter9-opening', Boolean(chapterPage.showTitle));
@@ -2811,6 +2831,8 @@
   async function populateChapterTenText(chapterPage, startOverride = null) {
     textLeft.innerHTML = '';
     textRight.innerHTML = '';
+    textLeft.style.paddingTop = '';
+    textRight.style.paddingTop = '';
     textRight.style.display = '';
     document.body.classList.add('chapter10-page');
     document.body.classList.toggle('chapter10-opening', Boolean(chapterPage.showTitle));
@@ -2993,6 +3015,8 @@
 
     textLeft.innerHTML = '';
     textRight.innerHTML = '';
+    textLeft.style.paddingTop = '';
+    textRight.style.paddingTop = '';
     textRight.style.display = '';
     document.body.classList.add('chapter11-page');
     document.body.classList.toggle('chapter11-opening', Boolean(chapterPage.showTitle));
@@ -3160,6 +3184,8 @@
   async function populateChapterTwelveText(chapterPage, startOverride = null) {
     textLeft.innerHTML = '';
     textRight.innerHTML = '';
+    textLeft.style.paddingTop = '';
+    textRight.style.paddingTop = '';
     textRight.style.display = '';
     document.body.classList.add('chapter12-page');
     document.body.classList.toggle('chapter12-opening', Boolean(chapterPage.showTitle));
@@ -3413,6 +3439,8 @@
 
     textLeft.innerHTML = '';
     textRight.innerHTML = '';
+    textLeft.style.paddingTop = '';
+    textRight.style.paddingTop = '';
     textRight.style.display = '';
     document.body.classList.add('chapter13-page');
     document.body.classList.toggle('chapter13-opening', Boolean(chapterPage.showTitle));
@@ -3657,6 +3685,8 @@
 
     textLeft.innerHTML = '';
     textRight.innerHTML = '';
+    textLeft.style.paddingTop = '';
+    textRight.style.paddingTop = '';
     textRight.style.display = '';
     document.body.classList.add('chapter14-page');
     document.body.classList.toggle('chapter14-opening', Boolean(chapterPage.showTitle));
@@ -3812,6 +3842,8 @@
   async function populateChapterFifteenText(chapterPage, startOverride = null) {
     textLeft.innerHTML = '';
     textRight.innerHTML = '';
+    textLeft.style.paddingTop = '';
+    textRight.style.paddingTop = '';
     textRight.style.display = '';
     document.body.classList.add('chapter15-page');
     document.body.classList.toggle('chapter15-opening', Boolean(chapterPage.showTitle));
@@ -3918,6 +3950,8 @@
   async function populateEpilogueText(chapterPage, startOverride = null) {
     textLeft.innerHTML = '';
     textRight.innerHTML = '';
+    textLeft.style.paddingTop = '';
+    textRight.style.paddingTop = '';
     textRight.style.display = '';
     document.body.classList.add('epilogue-page');
     document.body.classList.toggle('epilogue-opening', Boolean(chapterPage.showTitle));
@@ -4031,6 +4065,8 @@
     setTimeout(function () { if (window.GlobalLoader) window.GlobalLoader.hide(); }, 350);
 
   } else if (currentPage.type === 'prologue') {
+    textLeft.style.paddingTop = '';
+    textRight.style.paddingTop = '';
     await populatePrologueText(currentPage);
 
   } else if (currentPage.type === 'birthday' || currentPage.type === 'chapter1' || currentPage.type === 'chapter1-opening') {
@@ -4274,6 +4310,8 @@
     }
 
   } else {
+    textLeft.style.paddingTop = '';
+    textRight.style.paddingTop = '';
     console.warn(`[chapter.js] Unknown page type: "${currentPage.type}" (id=${currentPage.id}). Falling back to raw text split.`);
     textRight.style.display = '';
     const total = currentPage.bookEnd - currentPage.bookStart;
@@ -4283,6 +4321,28 @@
       p.textContent = bookParagraphs[i];
       (i - currentPage.bookStart < half ? textLeft : textRight).appendChild(p);
     }
+  }
+
+  // Bottom-align text on opening pages (title pages without scene illustrations).
+  // Skip if any scene-mode is active (scene pages have their own illustration-based layout).
+  const _bodyClass = document.body.className;
+  const _inSceneMode = _bodyClass.includes('-scene-mode') || _bodyClass.includes('-moon-mode') || _bodyClass.includes('-scene54-mode');
+  if (currentPage.showTitle && !_inSceneMode && currentPage.type !== 'birthday' && currentPage.type !== 'prologue') {
+    requestAnimationFrame(() => {
+      [textLeft, textRight].forEach(col => {
+        if (!col || col.style.display === 'none') return;
+        const pTags = col.querySelectorAll('p');
+        if (!pTags.length) return;
+        const colH = col.offsetHeight;
+        let contentH = 0;
+        pTags.forEach(p => { contentH += p.offsetHeight; });
+        const pad = Math.max(0, colH - contentH - 4);
+        col.style.paddingTop = pad > 8 ? pad + 'px' : '';
+      });
+    });
+  } else {
+    textLeft.style.paddingTop = '';
+    textRight.style.paddingTop = '';
   }
 
   if (isLoaderActive) {

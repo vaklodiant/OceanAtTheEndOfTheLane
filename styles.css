@@ -311,6 +311,35 @@ opacity:0;
   z-index: 3;
 }
 
+/* Chromatic dispersion vignette — main page only */
+.chrom-vignette {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 49; /* below UI buttons (z-index: 50) */
+  /* subtle dark vignette at edges only */
+  background: radial-gradient(ellipse at 50% 50%, transparent 54%, rgba(3, 4, 18, 0.32) 100%);
+}
+/* Chromatic fringe — corner glows, aspect-ratio-corrected (≈200px radius each corner) */
+.chrom-vignette::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    /* TL: violet */
+    radial-gradient(ellipse 13% 26% at 0% 0%,
+      rgba(145, 50, 255, 0.18) 0%, transparent 100%),
+    /* TR: cyan */
+    radial-gradient(ellipse 13% 26% at 100% 0%,
+      rgba(40, 200, 255, 0.16) 0%, transparent 100%),
+    /* BR: gold */
+    radial-gradient(ellipse 13% 26% at 100% 100%,
+      rgba(225, 170, 40, 0.14) 0%, transparent 100%),
+    /* BL: teal */
+    radial-gradient(ellipse 13% 26% at 0% 100%,
+      rgba(40, 230, 195, 0.14) 0%, transparent 100%);
+}
+
 .rays {
   position: absolute;
   inset: 0;
@@ -323,11 +352,11 @@ opacity:0;
   position: absolute;
   top: 0;
   left: 0;
-    opacity: 0.3;
+    opacity: 0.18;
 
   width: 100%;
   height: 100%;
-  transform: scale(1.7); 
+  transform: scale(1.7);
 
 }
 
@@ -490,6 +519,7 @@ height:auto;
     transition: transform 1s ease-out 0.9s, opacity 1s ease-out 0.9s;
 }
 
+
 .logo-float {
     position: absolute;
 
@@ -518,6 +548,20 @@ height:auto;
     height: auto;
     filter: drop-shadow(0 0 18px rgba(180, 168, 230, 0.0));
     animation: logoGlow 4s ease-in-out infinite;
+}
+
+.logo-wm::before {
+    content: "";
+    position: absolute;
+    inset: -22% -22%;
+    background: radial-gradient(ellipse at 50% 50%,
+        rgba(18, 14, 55, 0.30) 0%,
+        rgba(24, 19, 70, 0.18) 38%,
+        rgba(30, 24, 82, 0.07) 64%,
+        transparent 78%);
+    filter: blur(14px);
+    pointer-events: none;
+    z-index: 0;
 }
 
 .logo-wm.block {
@@ -1996,8 +2040,8 @@ body.chapter-page.scene-page .scene-waterlight {
   box-sizing: border-box;
   padding: 0 1.5rem;
   font-family: Garamond, "Times New Roman", serif;
-  font-size: 16px;
-  line-height: 1.75;
+  font-size: 18px;
+  line-height: 1.78;
   text-align: justify;
   text-align-last: left;
   hyphens: auto;
@@ -2007,6 +2051,7 @@ body.chapter-page.scene-page .scene-waterlight {
 
 .chapter-text--left  { left: 5%; overflow: hidden; height: 62vh; }
 .chapter-text--right { left: 46%; display: none; }
+
 
 .chapter-text p {
   margin: 0;
@@ -2583,8 +2628,8 @@ body.chapter-page.chapter1-page .chapter-text,
 body.chapter-page.chapter2-page .chapter-text {
   color: #1D3A5F;
   text-shadow: none;
-  font-size: clamp(14px, 0.96vw, 17px);
-  line-height: 1.85;
+  font-size: clamp(16px, 1.2vw, 20px);
+  line-height: 1.76;
   width: 41vw;
   padding: 0 1.4rem;
 }
@@ -2615,14 +2660,14 @@ body.chapter-page.chapter2-page .chapter-text--right {
 }
 
 body.chapter-page.chapter1-page.chapter1-opening .chapter-text--left {
-  top: 22vh;
-  height: 33vh;
+  top: 18vh;
+  height: 42vh;
   pointer-events: none;
 }
 
 body.chapter-page.chapter1-page.chapter1-opening .chapter-text--right {
-  top: 22vh;
-  height: 33vh;
+  top: 18vh;
+  height: 42vh;
   pointer-events: none;
 }
 
@@ -2953,6 +2998,10 @@ body.chapter-page.chapter1-page.chapter1-text-transition .chapter-one-title {
     linear-gradient(180deg, #F4F8EE 0%, #E2EDDA 100%);
 }
 
+.bg-chapter3 {
+  background: radial-gradient(ellipse at 55% 20%, #C8DFF0 0%, #94BBD5 45%, #5F94B3 100%);
+}
+
 body.chapter-page.chapter3-page .chapter-bg::before {
   content: '';
   position: absolute;
@@ -2988,13 +3037,13 @@ body.chapter-page.chapter3-page.chapter3-scene-mode .chapter-bg::after {
 body.chapter-page.chapter2-page.chapter2-opening .chapter-text--left,
 body.chapter-page.chapter2-page.chapter2-opening .chapter-text--right {
   top: 22vh;
-  height: 72vh;
+  height: 74vh;
 }
 
 body.chapter-page.chapter3-page.chapter3-opening .chapter-text--left,
 body.chapter-page.chapter3-page.chapter3-opening .chapter-text--right {
   top: 22vh;
-  height: 72vh;
+  height: 74vh;
 }
 
 body.chapter-page.chapter2-page.chapter2-scene-mode .chapter-text--left {
@@ -3327,8 +3376,8 @@ body.chapter-page.chapter3-page.chapter3-text-transition .chapter-three-title {
 body.chapter-page.chapter3-page .chapter-text {
   color: #1D3A5F;
   text-shadow: none;
-  font-size: clamp(14px, 0.96vw, 17px);
-  line-height: 1.85;
+  font-size: clamp(16px, 1.2vw, 20px);
+  line-height: 1.76;
   width: 41vw;
   padding: 0 1.4rem;
 }
@@ -3475,8 +3524,8 @@ body.chapter-page.chapter4-page.chapter4-text-transition .chapter-four-title {
 body.chapter-page.chapter4-page .chapter-text {
   color: #1D3A5F;
   text-shadow: none;
-  font-size: clamp(14px, 0.96vw, 17px);
-  line-height: 1.85;
+  font-size: clamp(16px, 1.2vw, 20px);
+  line-height: 1.76;
   width: 41vw;
   padding: 0 1.4rem;
 }
@@ -3506,7 +3555,7 @@ body.chapter-page.chapter4-page .chapter-text--right {
 body.chapter-page.chapter4-page.chapter4-opening .chapter-text--left,
 body.chapter-page.chapter4-page.chapter4-opening .chapter-text--right {
   top: 22vh;
-  height: 72vh;
+  height: 74vh;
 }
 
 body.chapter-page.chapter4-page .chapter-glow {
@@ -3712,7 +3761,7 @@ body.chapter-page.chapter4-page.chapter4-scene-mode .chapter4-scene-decor {
 
 body.chapter-page.chapter4-page.chapter4-scene-mode .chapter-text--left {
   top: 22vh;
-  height: 72vh;
+  height: 74vh;
   width: 44vw;
   z-index: 2;
 }
@@ -3771,8 +3820,8 @@ body.chapter-page.chapter5-page.chapter5-text-transition .chapter-five-title {
 body.chapter-page.chapter5-page .chapter-text {
   color: #1D3A5F;
   text-shadow: none;
-  font-size: clamp(14px, 0.96vw, 17px);
-  line-height: 1.85;
+  font-size: clamp(16px, 1.2vw, 20px);
+  line-height: 1.76;
   width: 41vw;
   padding: 0 1.4rem;
 }
@@ -3802,7 +3851,7 @@ body.chapter-page.chapter5-page .chapter-text--right {
 body.chapter-page.chapter5-page.chapter5-opening .chapter-text--left,
 body.chapter-page.chapter5-page.chapter5-opening .chapter-text--right {
   top: 22vh;
-  height: 72vh;
+  height: 74vh;
 }
 
 body.chapter-page.chapter5-page .chapter-glow {
@@ -3822,7 +3871,7 @@ body.chapter-page.chapter6-page .chapter-bg::before {
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse at 45% 25%, #B5E0FF 0%, #30556E 65%, #0F334B 100%);
+  background: radial-gradient(ellipse at 45% 25%, #7BB8D8 0%, #1E4560 65%, #091E35 100%);
   opacity: 0;
   transition: opacity 800ms ease;
   pointer-events: none;
@@ -3875,8 +3924,8 @@ body.chapter-page.chapter6-page.chapter6-text-transition .chapter-six-title {
 body.chapter-page.chapter6-page .chapter-text {
   color: #1D3A5F;
   text-shadow: none;
-  font-size: clamp(14px, 0.96vw, 17px);
-  line-height: 1.85;
+  font-size: clamp(16px, 1.2vw, 20px);
+  line-height: 1.76;
   width: 41vw;
   padding: 0 1.4rem;
 }
@@ -3906,7 +3955,7 @@ body.chapter-page.chapter6-page .chapter-text--right {
 body.chapter-page.chapter6-page.chapter6-opening .chapter-text--left,
 body.chapter-page.chapter6-page.chapter6-opening .chapter-text--right {
   top: 22vh;
-  height: 72vh;
+  height: 74vh;
 }
 
 body.chapter-page.chapter6-page .chapter-glow {
@@ -3941,6 +3990,8 @@ body.chapter-page.chapter6-page.chapter6-scene-mode .chapter6-scene-decor {
   object-fit: contain;
   z-index: 0;
   pointer-events: none;
+  opacity: 0.45;
+  mix-blend-mode: screen;
 }
 
 .chapter6-scene-decor__decorUrsula {
@@ -3953,6 +4004,7 @@ body.chapter-page.chapter6-page.chapter6-scene-mode .chapter6-scene-decor {
   object-fit: contain;
   z-index: 1;
   pointer-events: none;
+  opacity: 0.7;
 }
 
 .chapter6-scene-decor__bg {
@@ -4043,8 +4095,8 @@ body.chapter-page.chapter7-page.chapter7-text-transition .chapter-seven-title {
 body.chapter-page.chapter7-page .chapter-text {
   color: #1D3A5F;
   text-shadow: none;
-  font-size: clamp(14px, 0.96vw, 17px);
-  line-height: 1.85;
+  font-size: clamp(16px, 1.2vw, 20px);
+  line-height: 1.76;
   width: 41vw;
   padding: 0 1.4rem;
 }
@@ -4074,7 +4126,7 @@ body.chapter-page.chapter7-page .chapter-text--right {
 body.chapter-page.chapter7-page.chapter7-opening .chapter-text--left,
 body.chapter-page.chapter7-page.chapter7-opening .chapter-text--right {
   top: 22vh;
-  height: 72vh;
+  height: 74vh;
 }
 
 body.chapter-page.chapter7-page .chapter-glow {
@@ -4088,8 +4140,8 @@ body.chapter-page.chapter7-page .chapter1-decor {
 
 .bg-chapter8 {
   background:
-    radial-gradient(ellipse at 50% 40%, rgba(200,210,225,0.95) 0%, rgba(160,175,195,0.90) 35%, rgba(105,125,150,0.88) 70%, rgba(65,80,105,0.92) 100%),
-    linear-gradient(180deg, #D2DAE5 0%, #41516B 100%);
+    radial-gradient(ellipse at 50% 35%, rgba(220,235,248,0.97) 0%, rgba(185,208,230,0.93) 40%, rgba(145,172,200,0.90) 75%, rgba(100,135,170,0.92) 100%),
+    linear-gradient(180deg, #D8EBF8 0%, #90B4D0 100%);
 }
 
 .chapter-eight-title {
@@ -4134,8 +4186,8 @@ body.chapter-page.chapter8-page.chapter8-text-transition .chapter-eight-title {
 body.chapter-page.chapter8-page .chapter-text {
   color: #1D3A5F;
   text-shadow: none;
-  font-size: clamp(14px, 0.96vw, 17px);
-  line-height: 1.85;
+  font-size: clamp(16px, 1.2vw, 20px);
+  line-height: 1.76;
   width: 41vw;
   padding: 0 1.4rem;
 }
@@ -4165,7 +4217,7 @@ body.chapter-page.chapter8-page .chapter-text--right {
 body.chapter-page.chapter8-page.chapter8-opening .chapter-text--left,
 body.chapter-page.chapter8-page.chapter8-opening .chapter-text--right {
   top: 22vh;
-  height: 72vh;
+  height: 74vh;
 }
 
 body.chapter-page.chapter8-page .chapter-glow {
@@ -4229,10 +4281,10 @@ body.chapter-page.chapter8-page.chapter8-scene54-mode .chapter-text--right {
 
 .ch8-54-ursula {
   position: absolute;
-  bottom: -25%;
+  bottom: -22%;
   left: 50%;
   transform: translateX(-50%);
-  width: 50%;
+  width: 56%;
   height: auto;
   object-fit: contain;
   pointer-events: none;
@@ -4241,8 +4293,8 @@ body.chapter-page.chapter8-page.chapter8-scene54-mode .chapter-text--right {
 
 .bg-chapter9 {
   background:
-    radial-gradient(ellipse at 40% 30%, rgba(155, 175, 215, 0.97) 0%, rgba(138, 160, 191, 0.93) 35%, rgba(112, 152, 190, 0.9) 70%, rgba(26,74,104,0.95) 100%),
-    linear-gradient(180deg, hsl(234, 100%, 98%) 0%, #50879b 100%);
+    radial-gradient(ellipse at 40% 30%, rgba(215,232,248,0.97) 0%, rgba(178,205,228,0.93) 40%, rgba(130,168,200,0.90) 75%, rgba(80,130,165,0.92) 100%),
+    linear-gradient(180deg, #D5E8F5 0%, #7AADC5 100%);
 }
 
 .chapter-nine-title {
@@ -4287,8 +4339,8 @@ body.chapter-page.chapter9-page.chapter9-text-transition .chapter-nine-title {
 body.chapter-page.chapter9-page .chapter-text {
   color: #1D3A5F;
   text-shadow: none;
-  font-size: clamp(14px, 0.96vw, 17px);
-  line-height: 1.85;
+  font-size: clamp(16px, 1.2vw, 20px);
+  line-height: 1.76;
   width: 41vw;
   padding: 0 1.4rem;
 }
@@ -4318,7 +4370,7 @@ body.chapter-page.chapter9-page .chapter-text--right {
 body.chapter-page.chapter9-page.chapter9-opening .chapter-text--left,
 body.chapter-page.chapter9-page.chapter9-opening .chapter-text--right {
   top: 22vh;
-  height: 72vh;
+  height: 74vh;
 }
 
 body.chapter-page.chapter9-page .chapter-glow {
@@ -4403,8 +4455,8 @@ body.chapter-page.chapter9-page.chapter9-moon-mode .chapter-text {
 
 .bg-chapter10 {
   background:
-    radial-gradient(ellipse at 55% 25%, rgba(208,220,240,0.97) 0%, rgba(154,176,216,0.93) 35%, rgba(88, 139, 184, 0.9) 70%, rgba(42, 89, 136, 0.95) 100%),
-    linear-gradient(180deg, #122e5c 0%, #2a5988 100%);
+    radial-gradient(ellipse at 55% 25%, rgba(218,232,248,0.97) 0%, rgba(175,200,228,0.93) 40%, rgba(120,160,200,0.90) 75%, rgba(72,116,162,0.92) 100%),
+    linear-gradient(180deg, #D0E6F8 0%, #6898C4 100%);
 }
 
 .chapter-ten-title {
@@ -4449,8 +4501,8 @@ body.chapter-page.chapter10-page.chapter10-text-transition .chapter-ten-title {
 body.chapter-page.chapter10-page .chapter-text {
   color: #1D3A5F;
   text-shadow: none;
-  font-size: clamp(14px, 0.96vw, 17px);
-  line-height: 1.85;
+  font-size: clamp(16px, 1.2vw, 20px);
+  line-height: 1.76;
   width: 41vw;
   padding: 0 1.4rem;
 }
@@ -4480,7 +4532,7 @@ body.chapter-page.chapter10-page .chapter-text--right {
 body.chapter-page.chapter10-page.chapter10-opening .chapter-text--left,
 body.chapter-page.chapter10-page.chapter10-opening .chapter-text--right {
   top: 22vh;
-  height: 72vh;
+  height: 74vh;
 }
 
 body.chapter-page.chapter10-page .chapter-glow {
@@ -4563,8 +4615,8 @@ body.chapter-page.chapter11-page.chapter11-text-transition .chapter-eleven-title
 body.chapter-page.chapter11-page .chapter-text {
   color: #1D3A5F;
   text-shadow: none;
-  font-size: clamp(14px, 0.96vw, 17px);
-  line-height: 1.85;
+  font-size: clamp(16px, 1.2vw, 20px);
+  line-height: 1.76;
   width: 41vw;
   padding: 0 1.4rem;
 }
@@ -4572,6 +4624,11 @@ body.chapter-page.chapter11-page .chapter-text {
 body.chapter-page.chapter11-page .chapter-text p {
   text-shadow: none;
   text-indent: 1.35em;
+}
+
+body.chapter-page.chapter11-page.chapter11-scene-mode .chapter-text {
+  color: rgba(235, 245, 255, 0.95);
+  text-shadow: 0 1px 6px rgba(0, 10, 30, 0.5);
 }
 
 body.chapter-page.chapter11-page .chapter-text--left {
@@ -4594,7 +4651,7 @@ body.chapter-page.chapter11-page .chapter-text--right {
 body.chapter-page.chapter11-page.chapter11-opening .chapter-text--left,
 body.chapter-page.chapter11-page.chapter11-opening .chapter-text--right {
   top: 22vh;
-  height: 72vh;
+  height: 74vh;
 }
 
 body.chapter-page.chapter11-page .chapter-glow {
@@ -4707,8 +4764,8 @@ body.chapter-page.chapter12-page.chapter12-text-transition .chapter-twelve-title
 body.chapter-page.chapter12-page .chapter-text {
   color: #1D3A5F;
   text-shadow: none;
-  font-size: clamp(14px, 0.96vw, 17px);
-  line-height: 1.85;
+  font-size: clamp(16px, 1.2vw, 20px);
+  line-height: 1.76;
   width: 41vw;
   padding: 0 1.4rem;
 }
@@ -4738,7 +4795,7 @@ body.chapter-page.chapter12-page .chapter-text--right {
 body.chapter-page.chapter12-page.chapter12-opening .chapter-text--left,
 body.chapter-page.chapter12-page.chapter12-opening .chapter-text--right {
   top: 22vh;
-  height: 72vh;
+  height: 74vh;
 }
 
 body.chapter-page.chapter12-page .chapter-glow {
@@ -4796,8 +4853,8 @@ body.chapter-page.chapter13-page.chapter13-text-transition .chapter-thirteen-tit
 body.chapter-page.chapter13-page .chapter-text {
   color: #1D3A5F;
   text-shadow: none;
-  font-size: clamp(14px, 0.96vw, 17px);
-  line-height: 1.85;
+  font-size: clamp(16px, 1.2vw, 20px);
+  line-height: 1.76;
   width: 41vw;
   padding: 0 1.4rem;
 }
@@ -4827,7 +4884,7 @@ body.chapter-page.chapter13-page .chapter-text--right {
 body.chapter-page.chapter13-page.chapter13-opening .chapter-text--left,
 body.chapter-page.chapter13-page.chapter13-opening .chapter-text--right {
   top: 22vh;
-  height: 72vh;
+  height: 74vh;
 }
 
 body.chapter-page.chapter13-page .chapter-glow {
@@ -4889,12 +4946,12 @@ body.chapter-page.chapter13-page .chapter1-decor {
 
 body.chapter-page.chapter13-page.chapter13-scene-mode .chapter-text--left {
   top: 22vh;
-  height: 72vh;
+  height: 74vh;
 }
 
 body.chapter-page.chapter13-page.chapter13-scene-mode .chapter-text--right {
   top: 22vh;
-  height: 72vh;
+  height: 74vh;
 }
 
 body.chapter-page.chapter13-page.chapter13-scene2-mode .chapter-bg {
@@ -5091,8 +5148,8 @@ body.chapter-page.chapter13-page.chapter13-scene3-mode .sh-lower path:last-child
 }
 
 body.chapter-page.chapter14-page.chapter14-scene1-mode .chapter-text--left {
-  top: 55vh;
-  height: 42vh;
+  top: 50vh;
+  height: 46vh;
 }
 
 body.chapter-page.chapter14-page.chapter14-scene1-mode .chapter-text--right {
@@ -5158,8 +5215,8 @@ body.chapter-page.chapter14-page.chapter14-text-transition .chapter-fourteen-tit
 body.chapter-page.chapter14-page .chapter-text {
   color: #1D3A5F;
   text-shadow: none;
-  font-size: clamp(14px, 0.96vw, 17px);
-  line-height: 1.85;
+  font-size: clamp(16px, 1.2vw, 20px);
+  line-height: 1.76;
   width: 41vw;
   padding: 0 1.4rem;
 }
@@ -5189,7 +5246,7 @@ body.chapter-page.chapter14-page .chapter-text--right {
 body.chapter-page.chapter14-page.chapter14-opening .chapter-text--left,
 body.chapter-page.chapter14-page.chapter14-opening .chapter-text--right {
   top: 22vh;
-  height: 72vh;
+  height: 74vh;
 }
 
 body.chapter-page.chapter14-page .chapter-glow {
@@ -5203,8 +5260,8 @@ body.chapter-page.chapter14-page .chapter1-decor {
 
 .bg-chapter15 {
   background:
-    radial-gradient(ellipse at 50% 30%, rgba(150, 169, 209, 0.92) 0%, rgba(141, 165, 196, 0.88) 35%, rgba(89, 152, 180, 0.8) 70%, rgba(74, 73, 142, 0.88) 100%),
-    linear-gradient(180deg, #d7e3ff 0%, #7e6aa8 100%);
+    radial-gradient(ellipse at 50% 30%, rgba(210, 225, 248, 0.96) 0%, rgba(175, 198, 230, 0.92) 40%, rgba(125, 165, 205, 0.85) 75%, rgba(110, 130, 185, 0.88) 100%),
+    linear-gradient(180deg, #e4ecff 0%, #a090c8 100%);
 }
 
 .chapter-fifteen-title {
@@ -5249,8 +5306,8 @@ body.chapter-page.chapter15-page.chapter15-text-transition .chapter-fifteen-titl
 body.chapter-page.chapter15-page .chapter-text {
   color: #1D3A5F;
   text-shadow: none;
-  font-size: clamp(14px, 0.96vw, 17px);
-  line-height: 1.85;
+  font-size: clamp(16px, 1.2vw, 20px);
+  line-height: 1.76;
   width: 41vw;
   padding: 0 1.4rem;
 }
@@ -5280,7 +5337,7 @@ body.chapter-page.chapter15-page .chapter-text--right {
 body.chapter-page.chapter15-page.chapter15-opening .chapter-text--left,
 body.chapter-page.chapter15-page.chapter15-opening .chapter-text--right {
   top: 22vh;
-  height: 72vh;
+  height: 74vh;
 }
 
 body.chapter-page.chapter15-page .chapter-glow {
@@ -5294,8 +5351,8 @@ body.chapter-page.chapter15-page .chapter1-decor {
 
 .bg-epilogue {
   background:
-    radial-gradient(ellipse at 50% 30%, rgba(180, 204, 255, 0.92) 0%, rgba(145, 172, 208, 0.88) 35%, rgba(89, 152, 180, 0.8) 70%, rgba(74, 73, 142, 0.88) 100%),
-    linear-gradient(180deg, #b0c8ff 0%, #7e6aa8 100%);
+    radial-gradient(ellipse at 50% 30%, rgba(220, 232, 255, 0.96) 0%, rgba(180, 205, 238, 0.92) 40%, rgba(130, 170, 215, 0.85) 75%, rgba(115, 135, 192, 0.88) 100%),
+    linear-gradient(180deg, #e8f0ff 0%, #a898d0 100%);
 }
 
 .epilogue-title {
@@ -5340,8 +5397,8 @@ body.chapter-page.epilogue-page.epilogue-text-transition .epilogue-title {
 body.chapter-page.epilogue-page .chapter-text {
   color: #1D3A5F;
   text-shadow: none;
-  font-size: clamp(14px, 0.96vw, 17px);
-  line-height: 1.85;
+  font-size: clamp(16px, 1.2vw, 20px);
+  line-height: 1.76;
   width: 41vw;
   padding: 0 1.4rem;
 }
@@ -5371,7 +5428,7 @@ body.chapter-page.epilogue-page .chapter-text--right {
 body.chapter-page.epilogue-page.epilogue-opening .chapter-text--left,
 body.chapter-page.epilogue-page.epilogue-opening .chapter-text--right {
   top: 22vh;
-  height: 72vh;
+  height: 74vh;
 }
 
 body.chapter-page.epilogue-page .chapter-glow {
@@ -5666,8 +5723,8 @@ body.chapter-page.chapter6-page.chapter6-scene-mode .chapter-text--left {
   width: 32vw !important;
 }
 body.chapter-page.chapter6-page.chapter6-scene-mode .chapter-text--right {
-  left: 62vw !important;
-  width: 32vw !important;
+  left: 53vw !important;
+  width: 41vw !important;
   display: block !important;
 }
 
