@@ -1874,11 +1874,10 @@ backdrop-filter: blur(8px) contrast(1.1) saturate(1.2);
   position: absolute;
   inset: -80% -45%;
   background: radial-gradient(ellipse at 50% 50%,
-    rgba(6, 10, 52, 0.52) 0%,
-    rgba(12, 18, 72, 0.30) 36%,
-    rgba(18, 24, 80, 0.10) 60%,
-    transparent 76%);
-  filter: blur(24px);
+    rgba(6, 10, 52, 0.22) 0%,
+    rgba(12, 18, 72, 0.10) 42%,
+    transparent 70%);
+  filter: blur(30px);
   pointer-events: none;
   z-index: 0;
 }
