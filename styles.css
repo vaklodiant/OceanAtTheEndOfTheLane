@@ -537,14 +537,14 @@ height:auto;
     bottom: 295px;
     z-index: 50;
     transform: translate(-50%, 150px);
-    transition: transform 1s ease-out 0.8s, opacity 1s ease-out 0.8s;
+    transition: transform 1.6s ease-in-out 0.6s, opacity 1.6s ease-in-out 0.6s;
 }
 
 .logo-wm video {
     display: block;
-    width: 33vw;
-    min-width: 280px;
-    max-width: 460px;
+    width: 28vw;
+    min-width: 240px;
+    max-width: 390px;
     height: auto;
     filter: drop-shadow(0 0 18px rgba(180, 168, 230, 0.0));
     animation: logoGlow 4s ease-in-out infinite;
@@ -1864,16 +1864,54 @@ backdrop-filter: blur(8px) contrast(1.1) saturate(1.2);
   display: flex;
   justify-content: center;
   margin-bottom: 5vh;
+  position: relative;
+}
+
+.settings-title-wrap::before,
+.extra-title-wrap::before,
+.contents-title-wrap::before {
+  content: "";
+  position: absolute;
+  inset: -80% -45%;
+  background: radial-gradient(ellipse at 50% 50%,
+    rgba(6, 10, 52, 0.52) 0%,
+    rgba(12, 18, 72, 0.30) 36%,
+    rgba(18, 24, 80, 0.10) 60%,
+    transparent 76%);
+  filter: blur(24px);
+  pointer-events: none;
+  z-index: 0;
 }
 
 body.is-fullscreen.settings-page .settings-title-wrap {
   margin-bottom: 12vh;
 }
 
+
 .settings-title-svg {
   height: 110px;
   width: auto;
+  position: relative;
+  z-index: 1;
   filter: drop-shadow(0 0 14px rgba(255, 180, 211, 0.45)) drop-shadow(0 0 6px rgba(214, 168, 90, 0.3));
+  animation: logoGlow 4s ease-in-out infinite;
+}
+
+.extra-title-wrap,
+.contents-title-wrap {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.extra-title-svg,
+.contents-title-svg {
+  height: 110px;
+  width: auto;
+  position: relative;
+  z-index: 1;
+  filter: drop-shadow(0 0 14px rgba(255, 180, 211, 0.45)) drop-shadow(0 0 6px rgba(214, 168, 90, 0.3));
+  animation: logoGlow 4s ease-in-out infinite;
 }
 
 .btn-save {
