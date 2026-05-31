@@ -1304,14 +1304,11 @@ transform:translateY(0) translateX(0);
 }
 
 .menu-btn{
-z-index: 50;
 position:absolute;
 top:40px;
 right:40px;
-
 cursor:pointer;
-
-z-index:20;
+z-index: 55;
 }
 
 .menu-panel{
@@ -5589,8 +5586,8 @@ html.no-transition *::after {
 .resume-dialog {
   position: relative;
   overflow: visible;
-  width: min(400px, 78vw);
-  padding: 30px 26px 28px;
+  width: min(380px, 78vw);
+  padding: 40px 36px 36px;
   border-radius: 34px;
   border: 1px solid rgba(255, 255, 255, 0.08);
 
@@ -5667,8 +5664,8 @@ html.no-transition *::after {
   color: rgba(246, 250, 255, 0.96);
   text-align: center;
   text-shadow: 0 0 22px rgba(240, 250, 255, 0.18);
-  margin: 0 0 30px;
-  line-height: 1.6;
+  margin: 0 0 28px;
+  line-height: 1.7;
 }
 
 .resume-dialog__buttons {
@@ -5676,9 +5673,8 @@ html.no-transition *::after {
   z-index: 1;
   display: flex;
   flex-wrap: wrap;
-  gap: 56px;
+  gap: 24px;
   justify-content: center;
-  max-width: 380px;
   margin: 0 auto;
 }
 
