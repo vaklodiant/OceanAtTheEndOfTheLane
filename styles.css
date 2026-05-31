@@ -542,9 +542,9 @@ height:auto;
 
 .logo-wm video {
     display: block;
-    width: 28vw;
-    min-width: 240px;
-    max-width: 390px;
+    width: 34vw;
+    min-width: 280px;
+    max-width: 460px;
     height: auto;
     filter: drop-shadow(0 0 18px rgba(180, 168, 230, 0.0));
     animation: logoGlow 4s ease-in-out infinite;
