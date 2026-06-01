@@ -9,8 +9,6 @@
 </head>
 <body class="chapter-page">
 
-<canvas id="wave-canvas"></canvas>
-
 <div class="screen">
 <div class="bubbles">
   <span></span>
@@ -75,6 +73,8 @@
 </div>
 
 <div class="chapter-bg"></div>
+<!-- wave canvas lives here so z-index:1 puts it above bg(z:0) but below .chapter-scene(z:1, appended later by JS) -->
+<canvas id="wave-canvas"></canvas>
 <div class="chapter-glow"></div>
 
 <div class="chapter-text chapter-text--left"></div>
