@@ -537,10 +537,11 @@ function buildCard(ch) {
       window.AudioManager?.playSound('music/sounds/toggler.mp3');
       const href = `chapter.html?page=${ch.page}`;
       document.body.classList.remove('show');
-      document.body.classList.add('hide');
-      window.GlobalLoader?.show();
+      document.body.classList.add('hide');          // page starts fading out
       window.AudioManager?.fadeMusicOut(650);
-      setTimeout(() => { window.location.href = href; }, 700);
+      // Show loader after 300ms so the fade-out is briefly visible before it's covered
+      setTimeout(() => { window.GlobalLoader?.show(); }, 300);
+      setTimeout(() => { window.location.href = href; }, 750);
     });
   }
   card.innerHTML = `

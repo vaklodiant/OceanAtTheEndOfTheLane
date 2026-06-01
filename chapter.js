@@ -1,10 +1,27 @@
 (async () => {
-  document.querySelector('.screen').style.opacity = '1';
-  document.querySelector('.screen').style.filter = 'none';
+  // Screen starts at opacity:0 (CSS rule). It will be faded in at end of init.
+  // body.chapter-page already sets filter:none via CSS, so no inline override needed.
 
   if (localStorage.getItem('a11yMode') === '1') {
     document.body.classList.add('a11y-mode');
   }
+
+  // Smooth fade-out when navigating from chapter page via the chapter menu.
+  // Registered as a capturing listener so it fires before loader.js's own capture handler,
+  // allowing us to cancel the instant loader popup and do a graceful page exit instead.
+  document.addEventListener('click', function _chMenuNav(e) {
+    var link = e.target.closest('.chapter-menu-panel a[href]');
+    if (!link) return;
+    var href = link.getAttribute('href');
+    if (!href || href.charAt(0) === '#') return;
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    document.body.classList.add('hide');          // body.chapter-page.hide → fade/blur out
+    setTimeout(function () {
+      if (window.GlobalLoader) window.GlobalLoader.show();
+      setTimeout(function () { window.location.href = href; }, 180);
+    }, 480);
+  }, true);
 
   {
     
@@ -33,10 +50,6 @@
       });
     } catch (_) {  }
   }
-
-  document.querySelector('.chapter-bg').style.opacity          = '0';
-  document.querySelector('.chapter-text--left').style.opacity  = '0';
-  document.querySelector('.chapter-text--right').style.opacity = '0';
 
   const isCrossFade = sessionStorage.getItem('chapterCrossFade') === '1';
   if (isCrossFade) sessionStorage.removeItem('chapterCrossFade');
@@ -4373,15 +4386,17 @@
   }
 
   {
+    // Fade in the whole screen at once — bg, text, decorations all appear together.
+    // The screen starts at opacity:0 (CSS). We keep the inline opacity:'1' permanently
+    // so the CSS default doesn't snap it back to 0 after the transition ends.
     const crossDecorSel = '.prologue-illus, .chapter-prologue-title, .chapter-one-title, .chapter1-decor';
     if (isCrossFade) {
       screen.querySelectorAll(crossDecorSel).forEach(el => { el.style.opacity = '0'; });
     }
 
-    const bg = document.querySelector('.chapter-bg');
     requestAnimationFrame(() => {
-      bg.style.transition = 'opacity 600ms ease';
-      bg.style.opacity = '1';
+      screen.style.transition = 'opacity 0.65s ease';
+      screen.style.opacity = '1';
       if (isCrossFade) {
         screen.querySelectorAll(crossDecorSel).forEach(el => {
           el.style.transition = 'opacity 600ms ease';
@@ -4389,25 +4404,15 @@
         });
       }
       setTimeout(() => {
-        textLeft.style.transition  = 'opacity 500ms ease';
-        textRight.style.transition = 'opacity 500ms ease';
-        textLeft.style.opacity  = '1';
-        textRight.style.opacity = '1';
-        setTimeout(() => {
-          bg.style.transition        = '';
-          bg.style.opacity           = '';
-          textLeft.style.transition  = '';
-          textLeft.style.opacity     = '';
-          textRight.style.transition = '';
-          textRight.style.opacity    = '';
-          if (isCrossFade) {
-            screen.querySelectorAll(crossDecorSel).forEach(el => {
-              el.style.transition = '';
-              el.style.opacity    = '';
-            });
-          }
-        }, 540);
-      }, 150);
+        screen.style.transition = '';
+        // opacity stays at '1' inline — intentional, overrides CSS opacity:0 rule
+        if (isCrossFade) {
+          screen.querySelectorAll(crossDecorSel).forEach(el => {
+            el.style.transition = '';
+            el.style.opacity    = '';
+          });
+        }
+      }, 700);
     });
   }
 

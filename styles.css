@@ -1972,6 +1972,13 @@ body.chapter-page {
   overflow: hidden;
   opacity: 1;
   filter: none;
+  background: #1c2d5e;
+  transition: opacity 0.7s ease, filter 0.7s ease;
+}
+
+body.chapter-page.hide {
+  opacity: 0;
+  filter: blur(12px);
 }
 
 .chapter-bg {
@@ -2317,6 +2324,11 @@ body.chapter-page .screen {
   margin: 0;
   padding: 0;
   position: relative;
+}
+
+/* Screen starts invisible; chapter.js fades it in once content is ready */
+body.chapter-page .screen {
+  opacity: 0;
 }
 
 body.chapter-page.scene-page {
@@ -5679,8 +5691,9 @@ html.no-transition *::after {
   position: relative;
   z-index: 1;
   display: flex;
-  flex-wrap: wrap;
-  gap: 24px;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 32px;
   justify-content: center;
   margin: 0 auto;
 }
