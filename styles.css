@@ -5697,6 +5697,7 @@ html.no-transition *::after {
   gap: 56px;
   justify-content: center;
   margin: 0 auto;
+  transform: translateX(-14px);
 }
 
 .btn-resume {
