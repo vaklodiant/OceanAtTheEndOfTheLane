@@ -30,11 +30,20 @@
       hideTimer = null;
     }
     loader.classList.remove('gl-hidden', 'gl-bursting');
-    loader.style.opacity = '';
-    loader.style.transition = '';
-    loader.style.pointerEvents = '';
+    loader.style.opacity = '0';
+    loader.style.transition = 'opacity 0.32s ease';
+    loader.style.pointerEvents = 'none';
     showTime = Date.now();
     isVisible = true;
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        loader.style.opacity = '1';
+        loader.style.pointerEvents = '';
+        setTimeout(function () {
+          loader.style.transition = '';
+        }, 350);
+      });
+    });
   }
 
   function doHide() {

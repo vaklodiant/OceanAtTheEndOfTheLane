@@ -5693,7 +5693,7 @@ html.no-transition *::after {
   display: flex;
   flex-wrap: nowrap;
   align-items: center;
-  gap: 32px;
+  gap: 56px;
   justify-content: center;
   margin: 0 auto;
 }
