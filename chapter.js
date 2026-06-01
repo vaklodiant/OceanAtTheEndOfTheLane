@@ -4283,6 +4283,18 @@
       }
     }
 
+  } else if (currentPage.type === 'chapter15') {
+    if (!chapter15PageStarts.has(currentPage.id)) {
+      const _first = enabledPages.filter(isChapterFifteenFlowPage).sort((a, b) => a.id - b.id)[0];
+      if (_first && _first.id !== currentPage.id) {
+        await buildPageStartsForward(currentPage.id, isChapterFifteenFlowPage, chapter15PageStarts, populateChapterFifteenText, () => chapter15NextStart);
+      }
+    }
+    const initialStart = chapter15PageStarts.get(currentPage.id) ?? currentPage.bookStart;
+    await populateChapterFifteenText(currentPage, initialStart);
+    chapter15PageStarts.set(currentPage.id, initialStart);
+    saveFlowState();
+
   } else if (currentPage.type === 'epilogue-opening' || currentPage.type === 'epilogue') {
     if (!epiloguePageStarts.has(currentPage.id)) {
       const _first = enabledPages.filter(isEpilogueFlowPage).sort((a, b) => a.id - b.id)[0];
