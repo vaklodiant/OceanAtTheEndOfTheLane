@@ -5180,8 +5180,15 @@ body.chapter-page.chapter13-page.chapter13-scene3-mode .sh-lower path:last-child
 }
 
 body.chapter-page.chapter14-page.chapter14-scene1-mode .chapter-text--left {
-  top: 50vh;
-  height: 46vh;
+  top: 44vh;
+  height: 52vh;
+}
+
+@media (max-height: 820px) {
+  body.chapter-page.chapter14-page.chapter14-scene1-mode .chapter-text--left {
+    top: 42vh;
+    height: 54vh;
+  }
 }
 
 body.chapter-page.chapter14-page.chapter14-scene1-mode .chapter-text--right {
