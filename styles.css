@@ -469,7 +469,7 @@ height:auto;
     bottom: 20%;
     left: 0;
     width: 100%;
-    z-index: -1;
+    z-index: 2;   /* above bg (z:-1) and waterweeds (z:1), below .cover/girl/fish (z:3) */
     pointer-events: none;
     line-height: 0;
 }
