@@ -589,7 +589,7 @@
   }
 
   function ensurePrologueDecor() {
-    if (screen.querySelector('.prologue-tree--1')) return;
+    if (screen.querySelector('.prologue-tree--1')) return Promise.resolve();
 
     const tree1 = document.createElement('div');
     tree1.className = 'prologue-illus prologue-tree prologue-tree--1';
@@ -598,18 +598,29 @@
     const house = document.createElement('div');
     house.className = 'prologue-illus prologue-house';
 
-    // Preload all SVGs before appending — so they're in cache when CSS background-image applies.
-    // Appending all three only after all are loaded keeps them in sync (no house lagging behind trees).
-    let loaded = 0;
-    ['./svg/prologue/tree01.svg', './svg/prologue/tree02.svg', './svg/prologue/house0.svg'].forEach(function (src) {
-      const img = new Image();
-      img.onload = img.onerror = function () {
-        if (++loaded < 3) return;
-        screen.appendChild(tree1);
-        screen.appendChild(tree2);
-        screen.appendChild(house);
-      };
-      img.src = src;
+    return new Promise(function (resolve) {
+      let loaded = 0;
+      let done = false;
+      function finish() {
+        if (done) return;
+        done = true;
+        if (!screen.querySelector('.prologue-tree--1')) {
+          screen.appendChild(tree1);
+          screen.appendChild(tree2);
+          screen.appendChild(house);
+        }
+        resolve();
+      }
+      // Safety: don't block the page forever on slow connections
+      setTimeout(finish, 2000);
+      ['./svg/prologue/tree01.svg', './svg/prologue/tree02.svg', './svg/prologue/house0.svg'].forEach(function (src) {
+        const img = new Image();
+        img.onload = img.onerror = function () {
+          if (++loaded < 3) return;
+          finish();
+        };
+        img.src = src;
+      });
     });
   }
 
@@ -720,7 +731,7 @@
     if (window.AudioManager && !_audioLayoutPass) AudioManager.setSceneAmbient(null);
 
     syncPrologueTitle(prologuePage);
-    ensurePrologueDecor();
+    await ensurePrologueDecor();
 
     await document.fonts.ready;
     
@@ -4386,29 +4397,32 @@
     // Fade in the whole screen at once — bg, text, decorations all appear together.
     // The screen starts at opacity:0 (CSS). We keep the inline opacity:'1' permanently
     // so the CSS default doesn't snap it back to 0 after the transition ends.
+    //
+    // crossDecorSel elements (prologue house/trees, chapter titles, ch1 decor) are handled
+    // explicitly via JS transition on every reveal — both initial load and cross-chapter fade.
+    // The CSS animation (prologueFadeIn etc.) is cancelled so the JS transition is the sole
+    // driver. This guarantees they appear in sync with the screen reveal regardless of timing.
     const crossDecorSel = '.prologue-illus, .chapter-prologue-title, .chapter-one-title, .chapter1-decor';
-    if (isCrossFade) {
-      screen.querySelectorAll(crossDecorSel).forEach(el => { el.style.opacity = '0'; });
-    }
+    screen.querySelectorAll(crossDecorSel).forEach(el => {
+      el.style.animation = 'none';  // cancel CSS keyframe; JS transition drives reveal
+      el.style.opacity   = '0';
+    });
 
     requestAnimationFrame(() => {
       screen.style.transition = 'opacity 0.65s ease';
       screen.style.opacity = '1';
-      if (isCrossFade) {
-        screen.querySelectorAll(crossDecorSel).forEach(el => {
-          el.style.transition = 'opacity 600ms ease';
-          el.style.opacity = '1';
-        });
-      }
+      screen.querySelectorAll(crossDecorSel).forEach(el => {
+        el.style.transition = 'opacity 600ms ease';
+        el.style.opacity = '1';
+      });
       setTimeout(() => {
         screen.style.transition = '';
         // opacity stays at '1' inline — intentional, overrides CSS opacity:0 rule
-        if (isCrossFade) {
-          screen.querySelectorAll(crossDecorSel).forEach(el => {
-            el.style.transition = '';
-            el.style.opacity    = '';
-          });
-        }
+        screen.querySelectorAll(crossDecorSel).forEach(el => {
+          el.style.transition = '';
+          el.style.opacity    = '';
+          // animation:none stays inline → element holds at CSS default (opacity:1)
+        });
       }, 700);
     });
   }
