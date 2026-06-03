@@ -12,11 +12,17 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
-  opacity: 1;
+  opacity: 0;
+  animation: loaderFadeIn 0.4s ease 0.05s forwards;
   transition: opacity 0.6s ease;
 }
 
+@keyframes loaderFadeIn {
+  to { opacity: 1; }
+}
+
 .loader.fade-out {
+  animation: none;
   opacity: 0;
 }
 
@@ -1136,6 +1142,7 @@ height:auto;
 .fish-1{
     width:175px;
     height:auto;
+    left:12%;
     top:50%;
     z-index:1;
 
@@ -1149,9 +1156,9 @@ height:auto;
 .fish-2{
     width: 155px;
     height: auto;
-    right: 20%;
+    right: 28%;
     left: auto;
-    top: 30%;
+    top: 36%;
     z-index: 3;
     filter:  saturate(1.2) brightness(1.1);
     offset-path: path("M-20,-220 C 60,-150 90,-70 0,0");
@@ -1972,7 +1979,7 @@ body.chapter-page {
   overflow: hidden;
   opacity: 1;
   filter: none;
-  background: #1c2d5e;
+  background: #3a5a8a;
   transition: opacity 0.7s ease, filter 0.7s ease;
 }
 
@@ -2488,8 +2495,14 @@ body.chapter-page #video4 {
 .prologue-illus {
   position: absolute;
   pointer-events: none;
-  z-index: 0;
   z-index: 1;
+  opacity: 0;
+  animation: prologueFadeIn 0.9s ease forwards;
+  animation-delay: 0.25s;
+}
+
+@keyframes prologueFadeIn {
+  to { opacity: 1; }
 }
 
 .prologue-tree--1 {
@@ -4600,7 +4613,7 @@ body.chapter-page.chapter10-page .chapter1-decor {
 }
 
 .bg-chapter11 {
-  background: radial-gradient(ellipse at 5% 5%, #88B0CB 0%, #7882C3 100%);
+  background: radial-gradient(ellipse at 5% 5%, #B0C8DE 0%, #9898C8 100%);
 }
 
 body.chapter-page.chapter11-page .chapter-bg::before {
@@ -4730,6 +4743,10 @@ body.chapter-page.chapter11-page.chapter11-scene-mode .chapter11-scene-decor {
   cursor: pointer;
 }
 
+body.is-fullscreen.chapter-page.chapter11-page.chapter11-scene-mode .chapter11-scene-decor__bg {
+  top: -35%;
+}
+
 @keyframes chapter11-bird-lunge {
   0%   { transform: translateX(0)     scale(1);    }
   50%  { transform: translateX(-20px) scale(1.02); }
@@ -4856,6 +4873,19 @@ body.chapter-page.chapter12-page .chapter1-decor {
   background: #DFEFF7;
 }
 
+body.chapter-page.chapter13-page {
+  background: #DFEFF7;
+}
+
+body.chapter-page.prologue-page {
+  background: #B7DCFA;
+}
+
+body.chapter-page.chapter1-page,
+body.chapter-page.chapter2-page {
+  background: #DDECFB;
+}
+
 .chapter-thirteen-title {
   position: absolute;
   left: 6.8vw;
@@ -4946,6 +4976,17 @@ body.chapter-page.chapter13-page .chapter1-decor {
   inset: 0;
   pointer-events: none;
   z-index: 0;
+  animation: ch13FadeIn 0.6s ease forwards;
+}
+
+.ch13-2-decor,
+.ch13-3-decor {
+  animation: ch13FadeIn 0.6s ease forwards;
+}
+
+@keyframes ch13FadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 
 .ch13-scene-group {

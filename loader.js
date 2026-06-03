@@ -30,6 +30,7 @@
       hideTimer = null;
     }
     loader.classList.remove('gl-hidden', 'gl-bursting');
+    loader.style.animation = 'none';
     loader.style.opacity = '0';
     loader.style.transition = 'opacity 0.32s ease';
     loader.style.pointerEvents = 'none';

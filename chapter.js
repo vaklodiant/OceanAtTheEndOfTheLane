@@ -604,6 +604,9 @@
     if (!screen.querySelector('.prologue-house')) {
       const house = document.createElement('div');
       house.className = 'prologue-illus prologue-house';
+      // Preload SVG so it appears together with trees on first render
+      const _preload = new Image();
+      _preload.src = './svg/prologue/house0.svg';
       screen.appendChild(house);
     }
   }
@@ -814,8 +817,10 @@
     windowVid.loop = true;
     windowVid.muted = true;
     windowVid.playsInline = true;
-    windowVid.preload = 'metadata';
+    windowVid.preload = 'auto';
     windowVid.playbackRate = 0.7;
+    windowVid.style.opacity = '0';
+    windowVid.style.transition = 'opacity 0.7s ease';
 
     const catVid = document.createElement('video');
     catVid.src = './video/chapter1/cat.webm';
@@ -824,8 +829,22 @@
     catVid.loop = true;
     catVid.muted = true;
     catVid.playsInline = true;
-    catVid.preload = 'metadata';
+    catVid.preload = 'auto';
     catVid.style.cursor = 'pointer';
+    catVid.style.opacity = '0';
+    catVid.style.transition = 'opacity 0.7s ease';
+
+    // Fade in both videos together once either is ready (with fallback)
+    let scene9Ready = false;
+    function showScene9Videos() {
+      if (scene9Ready) return;
+      scene9Ready = true;
+      windowVid.style.opacity = '1';
+      catVid.style.opacity = '1';
+    }
+    windowVid.addEventListener('canplay', showScene9Videos, { once: true });
+    catVid.addEventListener('canplay', showScene9Videos, { once: true });
+    setTimeout(showScene9Videos, 3000);
 
     let catClicked = false;
     let catRafId = null;
@@ -3597,8 +3616,7 @@
     const nxtScene13 = nextPage.scene   in ch13DecorMap ? nextPage.scene   : null;
     const isLeavingScene13  = curScene13 && curScene13 !== nxtScene13;
     const isEnteringScene13 = nxtScene13 && nxtScene13 !== curScene13;
-    const needsBgFade = isLeavingScene13 || isEnteringScene13 ||
-                        (!goingForward && !chapter13PageStarts.has(nextPage.id));
+    const needsBgFade = isLeavingScene13 || isEnteringScene13;
 
     if (isLeavingScene13) {
       const decor = screen.querySelector(ch13DecorMap[curScene13]);
@@ -4259,16 +4277,11 @@
     {
       const ch13DecorMap = { 'ch13': '.ch13-decor', 'ch13-2': '.ch13-2-decor', 'ch13-3': '.ch13-3-decor' };
       const sceneKey = currentPage.scene in ch13DecorMap ? currentPage.scene : null;
-      if (sceneKey) {
+      if (sceneKey && isCrossFade) {
+        // On cross-chapter fade-in, the screen fades in from opacity 0
+        // The decor is inside the screen and fades in with it
         const decor = screen.querySelector(ch13DecorMap[sceneKey]);
-        if (decor) {
-          decor.style.opacity = '0';
-          requestAnimationFrame(() => {
-            decor.style.transition = 'opacity 700ms ease';
-            decor.style.opacity = '1';
-            setTimeout(() => { decor.style.transition = ''; }, 740);
-          });
-        }
+        if (decor) decor.style.opacity = '';
       }
     }
 
@@ -4348,27 +4361,9 @@
     }
   }
 
-  // Bottom-align text on opening pages (title pages without scene illustrations).
-  // Skip if any scene-mode is active (scene pages have their own illustration-based layout).
-  const _bodyClass = document.body.className;
-  const _inSceneMode = _bodyClass.includes('-scene-mode') || _bodyClass.includes('-moon-mode') || _bodyClass.includes('-scene54-mode');
-  if (currentPage.showTitle && !_inSceneMode && currentPage.type !== 'birthday' && currentPage.type !== 'prologue') {
-    requestAnimationFrame(() => {
-      [textLeft, textRight].forEach(col => {
-        if (!col || col.style.display === 'none') return;
-        const pTags = col.querySelectorAll('p');
-        if (!pTags.length) return;
-        const colH = col.offsetHeight;
-        let contentH = 0;
-        pTags.forEach(p => { contentH += p.offsetHeight; });
-        const pad = Math.max(0, colH - contentH - 4);
-        col.style.paddingTop = pad > 8 ? pad + 'px' : '';
-      });
-    });
-  } else {
-    textLeft.style.paddingTop = '';
-    textRight.style.paddingTop = '';
-  }
+  // Always top-align text (no bottom padding)
+  textLeft.style.paddingTop = '';
+  textRight.style.paddingTop = '';
 
   if (isLoaderActive) {
     const loader = document.querySelector('.chapter-loader');
@@ -4496,6 +4491,26 @@
     };
     clickTarget._sceneClickHandler = handler;
     clickTarget.addEventListener('click', handler);
+  }
+
+  function _resetAllTransitioningFlags() {
+    isPrologueTransitioning = false;
+    isChapterOneTransitioning = false;
+    isChapterTwoTransitioning = false;
+    isChapterThreeTransitioning = false;
+    isChapterFourTransitioning = false;
+    isChapterFiveTransitioning = false;
+    isChapterSixTransitioning = false;
+    isChapterSevenTransitioning = false;
+    isChapterEightTransitioning = false;
+    isChapterNineTransitioning = false;
+    isChapterTenTransitioning = false;
+    isChapterElevenTransitioning = false;
+    isChapterTwelveTransitioning = false;
+    isChapterThirteenTransitioning = false;
+    isChapterFourteenTransitioning = false;
+    isChapterFifteenTransitioning = false;
+    isEpilogueTransitioning = false;
   }
 
   async function crossChapterNavigate(nextPage) {
@@ -4633,6 +4648,9 @@
     }
 
     await crossChapterNavigate(nextPage);
+    } catch (err) {
+    console.error('[nav] prev error:', err);
+    _resetAllTransitioningFlags();
     } finally { updateNavButtons(); }
   });
 
@@ -4734,6 +4752,9 @@
     }
 
     await crossChapterNavigate(nextPage);
+    } catch (err) {
+    console.error('[nav] next error:', err);
+    _resetAllTransitioningFlags();
     } finally { updateNavButtons(); }
   });
 
