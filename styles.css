@@ -2496,13 +2496,13 @@ body.chapter-page #video4 {
   position: absolute;
   pointer-events: none;
   z-index: 1;
-  opacity: 0;
-  animation: prologueFadeIn 0.9s ease forwards;
+  animation: prologueFadeIn 0.9s ease both;
   animation-delay: 0.25s;
 }
 
 @keyframes prologueFadeIn {
-  to { opacity: 1; }
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 
 .prologue-tree--1 {
@@ -4976,12 +4976,12 @@ body.chapter-page.chapter13-page .chapter1-decor {
   inset: 0;
   pointer-events: none;
   z-index: 0;
-  animation: ch13FadeIn 0.6s ease forwards;
+  animation: ch13FadeIn 0.6s ease both;
 }
 
 .ch13-2-decor,
 .ch13-3-decor {
-  animation: ch13FadeIn 0.6s ease forwards;
+  animation: ch13FadeIn 0.6s ease both;
 }
 
 @keyframes ch13FadeIn {
