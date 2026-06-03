@@ -48,9 +48,7 @@ function startLoader() {
     function onReady() {
         if (--pending > 0) return;
         loader.classList.add('fade-out');
-        loader.addEventListener('transitionend', () => {
-            loader.style.display = 'none';
-        }, { once: true });
+        setTimeout(function () { loader.style.display = 'none'; }, 700);
         document.querySelector('.screen').classList.add('active');
         document.body.classList.add('show');
         initializeButtonShader();
@@ -227,7 +225,10 @@ function initializeButtonShader() {
       : Promise.resolve();
 
     audioFadePromise.then(function () {
-      setTimeout(function () { window.location.href = href; }, 200);
+      setTimeout(function () {
+        window.GlobalLoader?.show();
+        setTimeout(function () { window.location.href = href; }, 400);
+      }, 150);
     });
   }
 

@@ -62,6 +62,7 @@
           loader.style.opacity = '';
           loader.style.transition = '';
           loader.style.pointerEvents = '';
+          loader.style.animation = '';
           isVisible = false;
           hideTimer = null;
         }, 540);

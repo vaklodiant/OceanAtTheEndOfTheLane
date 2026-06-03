@@ -589,26 +589,28 @@
   }
 
   function ensurePrologueDecor() {
-    if (!screen.querySelector('.prologue-tree--1')) {
-      const tree1 = document.createElement('div');
-      tree1.className = 'prologue-illus prologue-tree prologue-tree--1';
-      screen.appendChild(tree1);
-    }
+    if (screen.querySelector('.prologue-tree--1')) return;
 
-    if (!screen.querySelector('.prologue-tree--2')) {
-      const tree2 = document.createElement('div');
-      tree2.className = 'prologue-illus prologue-tree prologue-tree--2';
-      screen.appendChild(tree2);
-    }
+    const tree1 = document.createElement('div');
+    tree1.className = 'prologue-illus prologue-tree prologue-tree--1';
+    const tree2 = document.createElement('div');
+    tree2.className = 'prologue-illus prologue-tree prologue-tree--2';
+    const house = document.createElement('div');
+    house.className = 'prologue-illus prologue-house';
 
-    if (!screen.querySelector('.prologue-house')) {
-      const house = document.createElement('div');
-      house.className = 'prologue-illus prologue-house';
-      // Preload SVG so it appears together with trees on first render
-      const _preload = new Image();
-      _preload.src = './svg/prologue/house0.svg';
-      screen.appendChild(house);
-    }
+    // Preload all SVGs before appending — so they're in cache when CSS background-image applies.
+    // Appending all three only after all are loaded keeps them in sync (no house lagging behind trees).
+    let loaded = 0;
+    ['./svg/prologue/tree01.svg', './svg/prologue/tree02.svg', './svg/prologue/house0.svg'].forEach(function (src) {
+      const img = new Image();
+      img.onload = img.onerror = function () {
+        if (++loaded < 3) return;
+        screen.appendChild(tree1);
+        screen.appendChild(tree2);
+        screen.appendChild(house);
+      };
+      img.src = src;
+    });
   }
 
   function syncPrologueTitle(prologuePage) {
