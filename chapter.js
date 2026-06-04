@@ -408,12 +408,57 @@
   loadVideo(video3, page.video3);
   loadVideo(video4, page.video4);
 
-  if (page.type === 'scene' && page.video1 && window.GlobalLoader) {
-    var _glHid = false;
-    var _onVideoReady = function () { if (!_glHid) { _glHid = true; window.GlobalLoader.hide(); } };
-    video1.addEventListener('canplaythrough', _onVideoReady, { once: true });
-    video1.addEventListener('error', _onVideoReady, { once: true });
-    setTimeout(_onVideoReady, 6000);
+  if (page.type === 'scene') {
+    // Keep chapter-loader visible until ALL visible scene videos are buffered.
+    // loader.js hides #global-loader on window.load (before videos are ready), so we need
+    // chapter-loader as a secondary cover to prevent a flash of empty/blank video areas.
+    // isLoaderActive=true means crossChapterNavigate already showed chapter-loader (lines 58-65);
+    // otherwise we show it ourselves here.
+    var _sceneLoader = document.querySelector('.chapter-loader');
+    if (_sceneLoader && !isLoaderActive) {
+      _sceneLoader.style.opacity       = '1';
+      _sceneLoader.style.pointerEvents = 'auto';
+    }
+
+    var _vidReady  = 0;
+    var _vidNeeded = (page.video1 ? 1 : 0) + (page.video3 ? 1 : 0);
+    var _sceneHidden = false;
+
+    function _hideSceneLoader() {
+      if (_sceneHidden) return;
+      _sceneHidden = true;
+      if (_sceneLoader) {
+        requestAnimationFrame(function () {
+          _sceneLoader.style.transition = 'opacity 500ms ease';
+          requestAnimationFrame(function () {
+            _sceneLoader.style.opacity = '0';
+            setTimeout(function () {
+              _sceneLoader.style.transition    = '';
+              _sceneLoader.style.pointerEvents = 'none';
+            }, 550);
+          });
+        });
+      }
+    }
+
+    function _onVidReady() {
+      if (++_vidReady < _vidNeeded) return;
+      _hideSceneLoader();
+    }
+
+    if (page.video1 && window.GlobalLoader) {
+      // Also hide global-loader when first video is ready (in case window.load is slow)
+      video1.addEventListener('canplaythrough', function () { window.GlobalLoader.hide(); }, { once: true });
+    }
+    if (page.video1) {
+      video1.addEventListener('canplaythrough', _onVidReady, { once: true });
+      video1.addEventListener('error',          _onVidReady, { once: true });
+    }
+    if (page.video3) {
+      video3.addEventListener('canplaythrough', _onVidReady, { once: true });
+      video3.addEventListener('error',          _onVidReady, { once: true });
+    }
+    setTimeout(_hideSceneLoader, 8000);  // safety: reveal even if videos never fire
   }
 
   if (page.type === 'birthday' && page.video2) {
@@ -4378,7 +4423,9 @@
   textLeft.style.paddingTop = '';
   textRight.style.paddingTop = '';
 
-  if (isLoaderActive) {
+  if (isLoaderActive && currentPage.type !== 'scene') {
+    // For scene pages, _hideSceneLoader() manages chapter-loader based on video readiness.
+    // For non-scene pages, hide chapter-loader now that content is ready.
     const loader = document.querySelector('.chapter-loader');
     if (loader) {
       requestAnimationFrame(() => {
