@@ -759,6 +759,7 @@ height:auto;
   opacity: 1;
   mix-blend-mode: screen;
   animation: shellGoldFlow 9s linear infinite;
+  will-change: background-position;
 
   -webkit-mask-image: url('./svg/big-shell.svg');
   -webkit-mask-repeat: no-repeat;
@@ -784,6 +785,7 @@ height:auto;
   mix-blend-mode: screen;
   opacity: 0.9;
   animation: shellShimmer 6.5s linear infinite;
+  will-change: background-position;
 
   -webkit-mask-image: url('./svg/big-shell.svg');
   -webkit-mask-repeat: no-repeat;
@@ -829,6 +831,7 @@ height:auto;
   background: url('./textures/gold.png');
   background-size: 600px auto;
   animation: moveGold 40s linear infinite;
+  will-change: background-position;
 
   -webkit-mask:
     linear-gradient(#000 0 0) content-box,
@@ -855,6 +858,7 @@ height:auto;
   background: url('./textures/gold.png');
   background-size: 600px auto;
   animation: moveGold 55s linear infinite reverse;
+  will-change: background-position;
 
   -webkit-mask:
     linear-gradient(#000 0 0) content-box,
@@ -1134,13 +1138,13 @@ height:auto;
 }
 
 .fish-1{
-    width:175px;
+    width:205px;
     height:auto;
-    left:12%;
+    left:13%;
     top:50%;
-    z-index:1;
+    z-index:4;
 
-    offset-path:path("M0,0 C 40,120 160,200 280,220");
+    offset-path:path("M0,0 C 40,110 150,185 250,210");
     offset-rotate: auto -50deg;
 
     opacity:0;
@@ -1148,15 +1152,15 @@ height:auto;
 }
 
 .fish-2{
-    width: 155px;
+    width: 185px;
     height: auto;
-    right: 28%;
+    right: 22%;
     left: auto;
-    top: 36%;
+    top: 23%;
     z-index: 3;
     filter:  saturate(1.2) brightness(1.1);
-    offset-path: path("M-20,-220 C 60,-150 90,-70 0,0");
-    offset-rotate: auto -125deg;
+    offset-path: path("M0,-160 C 90,-140 90,-60 0,0");
+    offset-rotate: 0deg;
     opacity: 0;
         will-change: offset-distance, opacity;
 }
@@ -1195,6 +1199,7 @@ height:auto;
     0%{
         offset-distance:0%;
         opacity:0;
+        transform: rotate(-22deg);
     }
 
     20%{
@@ -1204,6 +1209,7 @@ height:auto;
     100%{
         offset-distance:100%;
         opacity:1;
+        transform: rotate(0deg);
     }
 }
 
@@ -1870,8 +1876,8 @@ backdrop-filter: blur(8px) contrast(1.1) saturate(1.2);
   position: absolute;
   inset: -80% -45%;
   background: radial-gradient(ellipse at 50% 50%,
-    rgba(6, 10, 52, 0.22) 0%,
-    rgba(12, 18, 72, 0.10) 42%,
+    rgba(20, 60, 140, 0.48) 0%,
+    rgba(30, 80, 160, 0.22) 42%,
     transparent 70%);
   filter: blur(30px);
   pointer-events: none;
@@ -3666,9 +3672,9 @@ body.chapter-page.chapter4-page.chapter4-scene-mode .chapter4-scene-decor {
 }
 
 .ch4-video-side {
-  bottom: 5%;
-  right: 20%;
-  width: 25%;
+  bottom: 3%;
+  right: 19%;
+  width: 33%;
   height: auto;
   object-fit: contain;
   z-index: 7;
@@ -3747,9 +3753,9 @@ body.chapter-page.chapter4-page.chapter4-scene-mode .chapter4-scene-decor {
 }
 
 .ch4-trees-front {
-  bottom: -5%;
-  left: -5%;
-  width: 100%;
+  bottom: -6%;
+  right: -5%;
+  width: 110%;
   z-index: 6;
 }
 
@@ -3811,19 +3817,51 @@ body.chapter-page.chapter4-page.chapter4-scene-mode .chapter4-scene-decor {
   100% { transform: translateX(10%);  opacity: 0; }
 }
 
-body.chapter-page.chapter4-page.chapter4-scene-mode .chapter-text--left {
+body.chapter-page.chapter4-page.chapter4-scene-mode .chapter-four-title {
+  left: 7vw;
   top: 22vh;
-  height: 74vh;
-  width: 44vw;
+  z-index: 5;
+}
+
+body.chapter-page.chapter4-page.chapter4-scene-mode .chapter-text--left {
+  left: 7vw;
+  top: 36vh;
+  width: 41vw;
+  height: 55vh;
   z-index: 2;
+}
+
+body.chapter-page.chapter4-page.chapter4-scene-mode.chapter4-opening .chapter-four-title {
+  top: 20vh;
+}
+
+body.chapter-page.chapter4-page.chapter4-scene-mode.chapter4-opening .chapter-text--left {
+  top: 34vh;
+  height: 56vh;
 }
 
 body.chapter-page.chapter4-page.chapter4-scene-mode .chapter-text--right {
   display: none;
 }
 
-body.chapter-page.chapter4-page.chapter4-scene-mode .chapter-four-title {
-  z-index: 5;
+/* Полноэкранный режим */
+body.is-fullscreen.chapter-page.chapter4-page.chapter4-scene-mode .chapter-four-title {
+  top: 21vh;
+}
+
+body.is-fullscreen.chapter-page.chapter4-page.chapter4-scene-mode .chapter-text--left {
+  top: 34vh;
+  height: 58vh;
+  width: 40vw;
+}
+
+body.is-fullscreen.chapter-page.chapter4-page.chapter4-scene-mode.chapter4-opening .chapter-four-title {
+  top: 23vh;
+}
+
+body.is-fullscreen.chapter-page.chapter4-page.chapter4-scene-mode.chapter4-opening .chapter-text--left {
+  top: 32vh;
+  height: 59vh;
 }
 
 .bg-chapter5 {
@@ -3923,7 +3961,7 @@ body.chapter-page.chapter6-page .chapter-bg::before {
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse at 45% 25%, #7BB8D8 0%, #1E4560 65%, #091E35 100%);
+  background: radial-gradient(ellipse at 45% 25%, #548CA8 0%, #183955 65%, #071429 100%);
   opacity: 0;
   transition: opacity 800ms ease;
   pointer-events: none;
@@ -4032,6 +4070,12 @@ body.chapter-page.chapter6-page.chapter6-scene-mode .chapter6-scene-decor {
   opacity: 1;
 }
 
+/* Декор уходит вместе с текстом, не задерживается */
+body.chapter-page.chapter6-page.chapter6-scene-mode.chapter6-text-transition .chapter6-scene-decor {
+  opacity: 0;
+  transition: opacity 260ms ease;
+}
+
 .chapter6-scene-decor__tentacles {
   position: absolute;
   top: 50%;
@@ -4042,7 +4086,7 @@ body.chapter-page.chapter6-page.chapter6-scene-mode .chapter6-scene-decor {
   object-fit: contain;
   z-index: 0;
   pointer-events: none;
-  opacity: 0.45;
+  opacity: 0.22;
   mix-blend-mode: screen;
 }
 
@@ -5537,8 +5581,8 @@ body.chapter-page.epilogue-page .chapter1-decor {
 }
 
 body.a11y-mode .chapter-text {
-  font-size: clamp(15px, 1.08vw, 19px) !important;
-  line-height: 2.05 !important;
+  font-size: clamp(20px, 1.5vw, 26px) !important;
+  line-height: 2.1 !important;
 }
 
 body.a11y-mode .chapter-scene,
@@ -5809,10 +5853,18 @@ html.no-transition *::after {
 body.chapter-page.chapter6-page.chapter6-scene-mode .chapter-text--left {
   left: 6vw !important;
   width: 32vw !important;
+  height: 67vh !important;
 }
 body.chapter-page.chapter6-page.chapter6-scene-mode .chapter-text--right {
-  left: 53vw !important;
-  width: 41vw !important;
+  left: 63vw !important;
+  width: 34vw !important;
+  height: 67vh !important;
   display: block !important;
 }
-
+
+/* Полноэкранный режим — страница 43 */
+body.is-fullscreen.chapter-page.chapter6-page.chapter6-scene-mode .chapter-text--left,
+body.is-fullscreen.chapter-page.chapter6-page.chapter6-scene-mode .chapter-text--right {
+  height: 69vh !important;
+}
+

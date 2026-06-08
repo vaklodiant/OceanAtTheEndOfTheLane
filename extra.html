@@ -280,72 +280,6 @@ body.extra-page.screen.menu-open::after {
   user-select: none;
 }
 
-/* ---- Tab 3: Арт-бук ---- */
-.artbook-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.1rem;
-}
-
-.art-card {
-  border: 1px solid rgba(200, 169, 122, 0.28);
-  background: rgba(10, 18, 50, 0.3);
-  transition: background 0.3s, border-color 0.3s;
-  cursor: default;
-  display: flex;
-  flex-direction: column;
-}
-
-.art-card:hover {
-  background: rgba(10, 18, 50, 0.52);
-  border-color: rgba(200, 169, 122, 0.55);
-}
-
-.art-img-wrap {
-  width: 100%;
-  aspect-ratio: 3 / 4;
-  overflow: hidden;
-}
-
-.art-img-placeholder {
-  width: 100%;
-  height: 100%;
-  background: rgba(20, 28, 65, 0.6);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: filter 0.3s;
-}
-
-.art-card:hover .art-img-placeholder {
-  filter: brightness(0.78);
-}
-
-.art-img-placeholder svg {
-  opacity: 0.14;
-}
-
-.art-card-info {
-  padding: 0.6rem 0.7rem 0.65rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.18rem;
-}
-
-.art-label {
-  font-family: "Palatino Linotype", Palatino, serif;
-  font-size: 10px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: #c8a97a;
-}
-
-.art-caption {
-  font-family: "Palatino Linotype", Palatino, serif;
-  font-size: clamp(11px, 1vw, 13px);
-  color: rgba(220, 228, 255, 0.65);
-  line-height: 1.35;
-}
 </style>
 </head>
 
@@ -404,7 +338,7 @@ body.extra-page.screen.menu-open::after {
   <div class="menu-separator"></div>
   <a href="contents.html" class="menu-item">Оглавление</a>
   <div class="menu-separator"></div>
-  <a href="settings.htm" class="menu-item">Настройки</a>
+  <a href="settings.html" class="menu-item">Настройки</a>
   <div class="menu-separator"></div>
   <a href="extra.html" class="menu-item">Дополнительно</a>
 </div>
@@ -420,8 +354,6 @@ body.extra-page.screen.menu-open::after {
       <button class="tab-btn active" data-tab="about" role="tab" aria-selected="true">Об авторе</button>
       <span class="tab-sep" aria-hidden="true">&#9670;</span>
       <button class="tab-btn" data-tab="notes" role="tab" aria-selected="false">Заметки</button>
-      <span class="tab-sep" aria-hidden="true">&#9670;</span>
-      <button class="tab-btn" data-tab="artbook" role="tab" aria-selected="false">Арт-бук</button>
     </div>
 
     <div class="extra-tabs-body">
@@ -520,10 +452,6 @@ body.extra-page.screen.menu-open::after {
         </div>
       </div>
 
-      <div class="tab-panel" id="panel-artbook" role="tabpanel">
-        <div class="artbook-grid" id="artbookGrid"></div>
-      </div>
-
     </div>
   </div>
 </div>
@@ -541,40 +469,6 @@ tabBtns.forEach(btn => {
     btn.setAttribute('aria-selected', 'true');
     document.getElementById('panel-' + target).classList.add('active');
   });
-});
-
-const ART_ITEMS = [
-  { label: 'Пролог',    caption: 'Берег у заката' },
-  { label: 'Глава I',   caption: 'День рождения' },
-  { label: 'Глава II',  caption: 'Старый дом' },
-  { label: 'Глава III', caption: 'Первый шторм' },
-  { label: 'Глава IV',  caption: 'Лесная тропа' },
-  { label: 'Глава V',   caption: 'Маяк' },
-  { label: 'Глава VI',  caption: 'Встреча' },
-  { label: 'Глава VII', caption: 'Под водой' },
-  { label: 'Глава VIII','caption': 'Возвращение' },
-];
-
-const grid = document.getElementById('artbookGrid');
-
-ART_ITEMS.forEach(item => {
-  const card = document.createElement('div');
-  card.className = 'art-card';
-  card.innerHTML = `
-    <div class="art-img-wrap">
-      <div class="art-img-placeholder">
-        <svg width="44" height="38" viewBox="0 0 44 38" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect x="1" y="1" width="42" height="36" rx="1" stroke="white" stroke-width="1.2"/>
-          <circle cx="13" cy="13" r="5" stroke="white" stroke-width="1.2"/>
-          <path d="M1 26 L12 16 L20 23 L28 14 L43 28" stroke="white" stroke-width="1.2" fill="none" stroke-linejoin="round"/>
-        </svg>
-      </div>
-    </div>
-    <div class="art-card-info">
-      <span class="art-label">${item.label}</span>
-      <span class="art-caption">${item.caption}</span>
-    </div>`;
-  grid.appendChild(card);
 });
 
 /* ---- Page init ---- */
