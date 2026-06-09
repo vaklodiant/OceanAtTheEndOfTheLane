@@ -510,27 +510,6 @@ height:auto;
     height: auto;
 }
 
-.logo {
-    width: 400px;
-    height: 200px;
-    left: 38%;
-    bottom: 405px;
-    transform: translate(-50%, 150px);
-    transition: transform 1s ease-out 0.9s, opacity 1s ease-out 0.9s;
-}
-
-
-.logo-float {
-    position: absolute;
-
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    display: block;
-    will-change: transform;
-    transform: translateZ(0);
-    backface-visibility: hidden;
-}
 
 .logo-wm {
     left: 50%;
@@ -1293,9 +1272,6 @@ transform:translateY(0) translateX(0);
     animation: floatVertical 5s ease-in-out infinite;
 }
 
-.screen.active .logo-float {
-    animation: floatVertical 6.5s ease-in-out infinite;
-}
 
 .screen.active .fish-float {
     animation: floatVertical 4.2s ease-in-out infinite;
@@ -1402,7 +1378,6 @@ transform:translateX(18px) scale(1.1);
 transform: translateX(0);
 }
 
-.screen.menu-open .logo,
 .screen.menu-open .logo-wm,
 .screen.menu-open .start-btn{
 opacity:0;
