@@ -3936,7 +3936,7 @@ body.chapter-page.chapter6-page .chapter-bg::before {
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse at 45% 25%, #548CA8 0%, #183955 65%, #071429 100%);
+  background: radial-gradient(ellipse 35% 55% at 65% 85%, #4b778d 0%, #3a5971 30%, #203b53 60%, #071429 100%);
   opacity: 0;
   transition: opacity 800ms ease;
   pointer-events: none;
@@ -4081,13 +4081,14 @@ body.chapter-page.chapter6-page.chapter6-scene-mode.chapter6-text-transition .ch
 .chapter6-scene-decor__bg {
   position: absolute;
   top: 60%;
-  left: 50%;
+  left: 53%;
   transform: translate(-50%, -50%);
   width: 40%;
   height: auto;
   object-fit: contain;
   pointer-events: none;
   z-index: 2;
+  filter: brightness(1);
 }
 
 body.chapter-page.chapter6-page.chapter6-scene-mode .chapter6-scene-decor__bg {
@@ -4754,6 +4755,7 @@ body.chapter-page.chapter11-page.chapter11-scene-mode .chapter11-scene-decor {
   top: -50%;
   pointer-events: auto;
   cursor: pointer;
+  mix-blend-mode: multiply;
 }
 
 body.is-fullscreen.chapter-page.chapter11-page.chapter11-scene-mode .chapter11-scene-decor__bg {

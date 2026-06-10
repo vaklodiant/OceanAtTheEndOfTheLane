@@ -2822,7 +2822,7 @@
     if (existingTitle) existingTitle.remove();
   }
 
-  const CH10_WORM_PAGES = new Set([74, 75, 76]);
+  const CH10_WORM_PAGES = new Set([75, 76, 77]);
   let wormAnimFrame  = null;
   let wormFadeTimer  = null;
 
@@ -4578,6 +4578,7 @@
 
   async function crossChapterNavigate(nextPage) {
     const bg = document.querySelector('.chapter-bg');
+    screen.querySelectorAll('video').forEach(v => { try { v.pause(); } catch (_) {} });
     textLeft.style.transition  = 'opacity 300ms ease';
     textRight.style.transition = 'opacity 300ms ease';
     textLeft.style.opacity  = '0';
@@ -4595,6 +4596,12 @@
       _moonDecor.style.transition = 'opacity 600ms ease';
       _moonDecor.style.opacity = '0';
     }
+
+    screen.querySelectorAll('[class*="-decor"], [class*="-wavebg"], [class*="wave-bg"]').forEach(el => {
+      if (el === _moonDecor) return;
+      el.style.transition = 'opacity 300ms ease';
+      el.style.opacity = '0';
+    });
 
     if (currentPage.type === 'scene') {
       const scene  = document.querySelector('.chapter-scene');
