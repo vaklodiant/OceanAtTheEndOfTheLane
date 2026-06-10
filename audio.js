@@ -1,4 +1,5 @@
 (function () {
+
   function checkFullscreen() {
     var fs = window.innerHeight >= window.screen.height - 5;
     document.body.classList.toggle('is-fullscreen', fs);

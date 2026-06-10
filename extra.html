@@ -7,6 +7,7 @@
 <link rel="stylesheet" href="styles.css">
 <link rel="stylesheet" href="loader.css">
 <script>!function(){var e=document.createElement('div');e.id='global-loader';e.setAttribute('aria-hidden','true');e.innerHTML='<div class="gl-rings"><div class="gl-ring"></div><div class="gl-ring"></div><div class="gl-ring"></div></div>';document.documentElement.appendChild(e)}()</script>
+<script>if (localStorage.getItem('animationEnabled') === 'false') document.documentElement.classList.add('no-animations');</script>
 <style>
 body.extra-page {
   background-size: 120% 120%;
@@ -280,6 +281,17 @@ body.extra-page.screen.menu-open::after {
   user-select: none;
 }
 
+.notes-dropcap {
+  float: left;
+  font-size: 4.2em;
+  line-height: 0.76;
+  padding-right: 0.1em;
+  padding-top: 0.04em;
+  color: #c8a97a;
+  font-family: "Palatino Linotype", Palatino, serif;
+  font-style: italic;
+}
+
 </style>
 </head>
 
@@ -404,7 +416,7 @@ body.extra-page.screen.menu-open::after {
       <div class="tab-panel" id="panel-notes" role="tabpanel">
         <div class="notes-body">
           <p>
-            Книгу вы только что прочли. Дело сделано. Мы дошли до благодарностей. Сказать по правде, они не часть книги. И читать их не обязательно. В основном это лишь имена.
+            <span class="notes-dropcap">К</span>нигу вы только что прочли. Дело сделано. Мы дошли до благодарностей. Сказать по правде, они не часть книги. И читать их не обязательно. В основном это лишь имена.
 
 Семья в этой книге — не моя семья, а мои родственники великодушно позволили мне разграбить уголок нашего детства, и следили за тем, как я без особого стеснения переделываю знакомые места, вставляя их в сюжет. Я благодарен им всем, в особенности своей младшей сестре Лиззи, которая поддерживала меня и посылала давно забытые и подстегивающие память снимки (жаль, я вовремя не вспомнил старую теплицу, чтобы и ее вставить в книгу).
 
@@ -433,7 +445,7 @@ body.extra-page.screen.menu-open::after {
 
 Добрые твиттеряне очень выручили меня, когда понадобилось выяснить, сколько стоили лакричные тянучки «Черный Джек» и фруктовые жевательные конфеты в 1960-е гг. Без них я бы писал эту книгу вдвое дольше.
  </p>
-            <br><br>
+          <div class="notes-divider">&#9670; &nbsp; &#9670; &nbsp; &#9670;</div>
  <p>
           А в завершение я хочу поблагодарить Хэмпстоков, которые так или иначе, но всегда были рядом, когда я в них очень нуждался.
 

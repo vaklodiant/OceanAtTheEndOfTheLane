@@ -105,6 +105,7 @@
   }
 
   function ensureLoopRunning() {
+    if (document.documentElement.classList.contains('no-animations')) return;
     if (!loopRunning) {
       loopRunning = true;
       requestAnimationFrame(sharedLoop);

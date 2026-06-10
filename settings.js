@@ -45,6 +45,7 @@ if (saveBtn) {
   saveBtn.addEventListener('click', () => {
     if (toggleAnimation) {
       localStorage.setItem('animationEnabled', toggleAnimation.checked ? 'true' : 'false');
+      document.documentElement.classList.toggle('no-animations', !toggleAnimation.checked);
     }
     if (toggleHints) {
       localStorage.setItem('hintsEnabled', toggleHints.checked ? 'true' : 'false');

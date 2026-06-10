@@ -52,6 +52,9 @@ function startLoader() {
         document.querySelector('.screen').classList.add('active');
         document.body.classList.add('show');
         initializeButtonShader();
+        if (document.documentElement.classList.contains('no-animations')) {
+            videos.forEach(function (video) { video.pause(); });
+        }
     }
 
     if (pending === 0) {

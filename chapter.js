@@ -480,6 +480,21 @@
   const screen = document.querySelector('.screen');
   screen.appendChild(sceneEl);
 
+  if (document.documentElement.classList.contains('no-animations')) {
+    screen.querySelectorAll('video').forEach(function (v) { v.pause(); });
+    new MutationObserver(function (mutations) {
+      mutations.forEach(function (m) {
+        m.addedNodes.forEach(function (node) {
+          if (!(node instanceof HTMLElement)) return;
+          if (node.tagName === 'VIDEO') {
+            node.pause();
+          }
+          node.querySelectorAll && node.querySelectorAll('video').forEach(function (v) { v.pause(); });
+        });
+      });
+    }).observe(screen, { childList: true, subtree: true });
+  }
+
   function findPageById(id) {
     return pages.find(p => p.id === id && !p.disabled);
   }

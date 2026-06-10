@@ -3835,8 +3835,8 @@ body.is-fullscreen.chapter-page.chapter4-page.chapter4-scene-mode.chapter4-openi
 }
 
 body.is-fullscreen.chapter-page.chapter4-page.chapter4-scene-mode.chapter4-opening .chapter-text--left {
-  top: 32vh;
-  height: 59vh;
+  top: 37vh;
+  height: 54vh;
 }
 
 .bg-chapter5 {
@@ -3936,7 +3936,7 @@ body.chapter-page.chapter6-page .chapter-bg::before {
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse 35% 55% at 65% 85%, #4b778d 0%, #3a5971 30%, #203b53 60%, #071429 100%);
+  background: radial-gradient(ellipse 35% 55% at 60% 85%, #4b778d 0%, #3a5971 30%, #203b53 60%, #071429 100%);
   opacity: 0;
   transition: opacity 800ms ease;
   pointer-events: none;
@@ -4045,7 +4045,6 @@ body.chapter-page.chapter6-page.chapter6-scene-mode .chapter6-scene-decor {
   opacity: 1;
 }
 
-/* Декор уходит вместе с текстом, не задерживается */
 body.chapter-page.chapter6-page.chapter6-scene-mode.chapter6-text-transition .chapter6-scene-decor {
   opacity: 0;
   transition: opacity 260ms ease;
@@ -4081,7 +4080,7 @@ body.chapter-page.chapter6-page.chapter6-scene-mode.chapter6-text-transition .ch
 .chapter6-scene-decor__bg {
   position: absolute;
   top: 60%;
-  left: 53%;
+  left: 50%;
   transform: translate(-50%, -50%);
   width: 40%;
   height: auto;
@@ -5842,6 +5841,39 @@ body.chapter-page.chapter6-page.chapter6-scene-mode .chapter-text--right {
 /* Полноэкранный режим — страница 43 */
 body.is-fullscreen.chapter-page.chapter6-page.chapter6-scene-mode .chapter-text--left,
 body.is-fullscreen.chapter-page.chapter6-page.chapter6-scene-mode .chapter-text--right {
-  height: 69vh !important;
+  top: 15vh !important;
+  height: 81vh !important;
+}
+
+html.no-animations *,
+html.no-animations *::before,
+html.no-animations *::after {
+  animation-play-state: paused !important;
+  transition: none !important;
+}
+
+html.no-animations .fish-1 {
+  animation: none !important;
+  opacity: 1 !important;
+  offset-distance: 100% !important;
+}
+
+html.no-animations .fish-2 {
+  animation: none !important;
+  opacity: 1 !important;
+  offset-distance: 100% !important;
+  transform: rotate(0deg) !important;
+}
+
+html.no-animations .prologue-illus {
+  animation: none !important;
+  opacity: 1 !important;
+}
+
+html.no-animations .ch13-decor,
+html.no-animations .ch13-2-decor,
+html.no-animations .ch13-3-decor {
+  animation: none !important;
+  opacity: 1 !important;
 }
 
