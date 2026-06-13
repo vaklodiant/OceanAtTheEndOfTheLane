@@ -3741,15 +3741,15 @@
 
     if (isLeavingScene13) {
       const decor = screen.querySelector(ch13DecorMap[curScene13]);
-      if (decor) { decor.style.transition = 'opacity 260ms ease'; decor.style.opacity = '0'; }
+      if (decor) { decor.style.transition = 'opacity 500ms ease'; decor.style.opacity = '0'; }
     }
     if (needsBgFade) {
-      chapterBg.style.transition = 'opacity 260ms ease';
+      chapterBg.style.transition = 'opacity 500ms ease';
       chapterBg.style.opacity = '0';
     }
 
     document.body.classList.add('chapter13-text-transition');
-    const _waitMs = new Promise(r => setTimeout(r, 260));
+    const _waitMs = new Promise(r => setTimeout(r, needsBgFade ? 500 : 260));
     if (!goingForward && !chapter13PageStarts.has(nextPage.id)) {
       await Promise.all([_waitMs, buildPageStartsForward(nextPage.id, isChapterThirteenFlowPage, chapter13PageStarts, populateChapterThirteenText, () => chapter13NextStart)]);
     } else {

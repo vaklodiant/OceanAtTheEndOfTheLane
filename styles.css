@@ -4938,7 +4938,7 @@ body.chapter-page.chapter2-page {
 
 body.chapter-page.chapter13-page .chapter-text,
 body.chapter-page.chapter13-page .chapter-thirteen-title {
-  transition: opacity 260ms ease, transform 260ms ease;
+  transition: opacity 500ms ease, transform 500ms ease;
   will-change: opacity, transform;
 }
 
