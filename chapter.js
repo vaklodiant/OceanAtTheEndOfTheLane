@@ -3741,7 +3741,7 @@
 
     if (isLeavingScene13) {
       const decor = screen.querySelector(ch13DecorMap[curScene13]);
-      if (decor) { decor.style.transition = 'opacity 500ms ease'; decor.style.opacity = '0'; }
+      if (decor) { decor.style.animation = 'none'; decor.style.transition = 'opacity 500ms ease'; decor.style.opacity = '0'; }
     }
     if (needsBgFade) {
       chapterBg.style.transition = 'opacity 500ms ease';
