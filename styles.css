@@ -1144,9 +1144,9 @@ height:auto;
 .fish-2{
     width: 165px;
     height: auto;
-    right: 22%;
+    right: 26%;
     left: auto;
-    top: 23%;
+    top: 27%;
     z-index: 3;
     filter:  saturate(1.2) brightness(1.1);
     offset-path: path("M0,-160 C 90,-140 90,-60 0,0");
