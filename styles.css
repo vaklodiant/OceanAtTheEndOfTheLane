@@ -1,3 +1,8 @@
+:root {
+  --stage-h: min(100vh, calc(100vw * 9 / 16));
+  --stage-margin: calc((100vh - var(--stage-h)) / 2);
+}
+
 html, body {
   margin: 0;
   padding: 0;
@@ -177,6 +182,7 @@ width:100%;
 .screen {
     position: relative;
     width: 100%;
+    height: 100vh;
 	z-index: 0;
 }
 
@@ -437,6 +443,7 @@ height:auto;
     bottom: 0;
     left: 0;
     width: 100%;
+    height: 100%;
     z-index: 1;
     pointer-events: none;
     transform-origin: bottom center;
@@ -446,8 +453,11 @@ height:auto;
 
 .waterweeds-bg img {
     display: block;
-    width: 100%;
-    height: auto;
+    width: 116%;
+    height: 116%;
+    margin-left: -8%;
+    object-fit: cover;
+    object-position: bottom;
     opacity: 0.85;
 }
 
@@ -532,9 +542,9 @@ height:auto;
     position: absolute;
     inset: -22% -22%;
     background: radial-gradient(ellipse at 50% 50%,
-        rgba(18, 14, 55, 0.30) 0%,
-        rgba(24, 19, 70, 0.18) 38%,
-        rgba(30, 24, 82, 0.07) 64%,
+        rgba(18, 14, 55, 0.42) 0%,
+        rgba(24, 19, 70, 0.27) 38%,
+        rgba(30, 24, 82, 0.12) 64%,
         transparent 78%);
     filter: blur(14px);
     pointer-events: none;
@@ -1108,6 +1118,7 @@ height:auto;
 .fish {
     position: absolute;
     opacity: 0;
+    transition: filter .4s ease;
 }
 
 .fish-float video {
@@ -1117,10 +1128,10 @@ height:auto;
 }
 
 .fish-1{
-    width:205px;
+    width:185px;
     height:auto;
-    left:13%;
-    top:50%;
+    left:10%;
+    top:45%;
     z-index:4;
 
     offset-path:path("M0,0 C 40,110 150,185 250,210");
@@ -1131,7 +1142,7 @@ height:auto;
 }
 
 .fish-2{
-    width: 185px;
+    width: 165px;
     height: auto;
     right: 22%;
     left: auto;
@@ -1386,10 +1397,8 @@ transition:opacity .4s ease;
 }
 
 .screen.menu-open .fish{
-opacity:0;
+filter: opacity(0);
 pointer-events:none;
-transition:opacity .4s ease;
-animation:none;
 }
 
 .screen.menu-open .girl{
@@ -2052,7 +2061,7 @@ body.chapter-page.scene-page .scene-waterlight {
   position: absolute;
   width: 40%;
   height: 62vh;
-  top: 65%;
+  top: 65vh;
   transform: translateY(-50%);
   overflow: hidden;
   background: transparent;
@@ -2638,9 +2647,9 @@ body.chapter-page.chapter1-page #video1 {
 body.chapter-page.chapter1-page #video2,
 body.chapter-page.chapter1-page #video3 {
   position: absolute;
-  left: 55%; 
+  left: 55%;
   right: auto;
-  bottom: 2vh; 
+  bottom: 2vh;
   top: auto;
   width: 18vw;
   height: auto;

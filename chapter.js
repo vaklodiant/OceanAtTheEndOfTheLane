@@ -4744,10 +4744,9 @@
     const nextPage = findNextPage(currentPage.id);
     if (!nextPage) {
       if (window.AudioManager) {
-        window.AudioManager.fadeMusicOut(450).then(function () { window.location.href = 'index.html'; });
-      } else {
-        window.location.href = 'index.html';
+        window.AudioManager.fadeMusicOut(450);
       }
+      showEndOfBookOverlay(function () { window.location.href = 'index.html'; });
       return;
     }
 
@@ -4987,6 +4986,29 @@
   document.addEventListener('fullscreenchange', onFullscreenChange);
   document.addEventListener('webkitfullscreenchange', onFullscreenChange);
 })();
+
+function showEndOfBookOverlay(callback) {
+  var overlay = document.createElement('div');
+  overlay.id = 'end-loader';
+  overlay.setAttribute('aria-hidden', 'true');
+  overlay.innerHTML =
+    '<div class="el-text el-text--top">Конец книги.</div>' +
+    '<div class="gl-rings">' +
+      '<div class="gl-ring"></div>' +
+      '<div class="gl-ring"></div>' +
+      '<div class="gl-ring"></div>' +
+    '</div>' +
+    '<div class="el-text el-text--bottom">Вы возвращаетесь на поверхность.</div>';
+  document.documentElement.appendChild(overlay);
+
+  requestAnimationFrame(function () {
+    requestAnimationFrame(function () {
+      overlay.classList.add('el-show');
+    });
+  });
+
+  setTimeout(callback, 2200);
+}
 
 function initWave() {
   const canvas = document.getElementById('wave-canvas');

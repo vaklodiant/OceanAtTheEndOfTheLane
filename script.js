@@ -28,13 +28,24 @@
 
     if (hasIntro) {
         sessionStorage.setItem('introShown', 'true');
-        introScreen.addEventListener('click', function onIntroClick() {
+        let introDismissed = false;
+        function dismissIntro() {
+            if (introDismissed) return;
+            introDismissed = true;
             introScreen.classList.add('fade-out');
             introScreen.addEventListener('transitionend', () => {
                 introScreen.style.display = 'none';
                 startLoader();
             }, { once: true });
-        }, { once: true });
+        }
+        introScreen.addEventListener('click', dismissIntro, { once: true });
+        document.addEventListener('keydown', function onIntroKeydown(e) {
+            if (e.code === 'Space' || e.key === ' ' || e.key === 'Spacebar') {
+                e.preventDefault();
+                document.removeEventListener('keydown', onIntroKeydown);
+                dismissIntro();
+            }
+        });
     } else {
         startLoader();
     }

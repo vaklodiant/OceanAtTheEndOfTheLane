@@ -514,10 +514,15 @@ const pages = [];
 for (let i = 0; i < CHAPTERS.length; i += PER_PAGE) {
   pages.push(CHAPTERS.slice(i, i + PER_PAGE));
 }
-// Merge last page into previous if it has < 3 items (avoids mostly-empty last page)
+// Rebalance last page if it has < 3 items (avoids mostly-empty last page),
+// without exceeding PER_PAGE on the page before it.
 if (pages.length > 1 && pages[pages.length - 1].length < 3) {
   const tail = pages.pop();
-  pages[pages.length - 1].push(...tail);
+  const prev = pages.pop();
+  const combined = prev.concat(tail);
+  const mid = Math.ceil(combined.length / 2);
+  pages.push(combined.slice(0, mid));
+  pages.push(combined.slice(mid));
 }
 
 const track    = document.getElementById('carouselTrack');
