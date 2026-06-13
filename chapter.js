@@ -1,10 +1,27 @@
 (async () => {
-  document.querySelector('.screen').style.opacity = '1';
-  document.querySelector('.screen').style.filter = 'none';
+  // Screen starts at opacity:0 (CSS rule). It will be faded in at end of init.
+  // body.chapter-page already sets filter:none via CSS, so no inline override needed.
 
   if (localStorage.getItem('a11yMode') === '1') {
     document.body.classList.add('a11y-mode');
   }
+
+  // Smooth fade-out when navigating from chapter page via the chapter menu.
+  // Registered as a capturing listener so it fires before loader.js's own capture handler,
+  // allowing us to cancel the instant loader popup and do a graceful page exit instead.
+  document.addEventListener('click', function _chMenuNav(e) {
+    var link = e.target.closest('.chapter-menu-panel a[href]');
+    if (!link) return;
+    var href = link.getAttribute('href');
+    if (!href || href.charAt(0) === '#') return;
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    document.body.classList.add('hide');          // body.chapter-page.hide → fade/blur out
+    setTimeout(function () {
+      if (window.GlobalLoader) window.GlobalLoader.show();
+      setTimeout(function () { window.location.href = href; }, 180);
+    }, 480);
+  }, true);
 
   {
     
@@ -33,10 +50,6 @@
       });
     } catch (_) {  }
   }
-
-  document.querySelector('.chapter-bg').style.opacity          = '0';
-  document.querySelector('.chapter-text--left').style.opacity  = '0';
-  document.querySelector('.chapter-text--right').style.opacity = '0';
 
   const isCrossFade = sessionStorage.getItem('chapterCrossFade') === '1';
   if (isCrossFade) sessionStorage.removeItem('chapterCrossFade');
@@ -146,7 +159,7 @@
   let isEpilogueTransitioning = false;
   let epilogueNextStart = null;
   const epiloguePageStarts = new Map();
-  const flowStateStorageKey = 'bookFlowState.v24';
+  const flowStateStorageKey = 'bookFlowState.v25';
 
   function mapToObject(map) {
     const obj = {};
@@ -395,12 +408,57 @@
   loadVideo(video3, page.video3);
   loadVideo(video4, page.video4);
 
-  if (page.type === 'scene' && page.video1 && window.GlobalLoader) {
-    var _glHid = false;
-    var _onVideoReady = function () { if (!_glHid) { _glHid = true; window.GlobalLoader.hide(); } };
-    video1.addEventListener('canplaythrough', _onVideoReady, { once: true });
-    video1.addEventListener('error', _onVideoReady, { once: true });
-    setTimeout(_onVideoReady, 6000);
+  if (page.type === 'scene') {
+    // Keep chapter-loader visible until ALL visible scene videos are buffered.
+    // loader.js hides #global-loader on window.load (before videos are ready), so we need
+    // chapter-loader as a secondary cover to prevent a flash of empty/blank video areas.
+    // isLoaderActive=true means crossChapterNavigate already showed chapter-loader (lines 58-65);
+    // otherwise we show it ourselves here.
+    var _sceneLoader = document.querySelector('.chapter-loader');
+    if (_sceneLoader && !isLoaderActive) {
+      _sceneLoader.style.opacity       = '1';
+      _sceneLoader.style.pointerEvents = 'auto';
+    }
+
+    var _vidReady  = 0;
+    var _vidNeeded = (page.video1 ? 1 : 0) + (page.video3 ? 1 : 0);
+    var _sceneHidden = false;
+
+    function _hideSceneLoader() {
+      if (_sceneHidden) return;
+      _sceneHidden = true;
+      if (_sceneLoader) {
+        requestAnimationFrame(function () {
+          _sceneLoader.style.transition = 'opacity 500ms ease';
+          requestAnimationFrame(function () {
+            _sceneLoader.style.opacity = '0';
+            setTimeout(function () {
+              _sceneLoader.style.transition    = '';
+              _sceneLoader.style.pointerEvents = 'none';
+            }, 550);
+          });
+        });
+      }
+    }
+
+    function _onVidReady() {
+      if (++_vidReady < _vidNeeded) return;
+      _hideSceneLoader();
+    }
+
+    if (page.video1 && window.GlobalLoader) {
+      // Also hide global-loader when first video is ready (in case window.load is slow)
+      video1.addEventListener('canplaythrough', function () { window.GlobalLoader.hide(); }, { once: true });
+    }
+    if (page.video1) {
+      video1.addEventListener('canplaythrough', _onVidReady, { once: true });
+      video1.addEventListener('error',          _onVidReady, { once: true });
+    }
+    if (page.video3) {
+      video3.addEventListener('canplaythrough', _onVidReady, { once: true });
+      video3.addEventListener('error',          _onVidReady, { once: true });
+    }
+    setTimeout(_hideSceneLoader, 8000);  // safety: reveal even if videos never fire
   }
 
   if (page.type === 'birthday' && page.video2) {
@@ -421,6 +479,21 @@
   const textRight = document.querySelector('.chapter-text--right');
   const screen = document.querySelector('.screen');
   screen.appendChild(sceneEl);
+
+  if (document.documentElement.classList.contains('no-animations')) {
+    screen.querySelectorAll('video').forEach(function (v) { v.pause(); });
+    new MutationObserver(function (mutations) {
+      mutations.forEach(function (m) {
+        m.addedNodes.forEach(function (node) {
+          if (!(node instanceof HTMLElement)) return;
+          if (node.tagName === 'VIDEO') {
+            node.pause();
+          }
+          node.querySelectorAll && node.querySelectorAll('video').forEach(function (v) { v.pause(); });
+        });
+      });
+    }).observe(screen, { childList: true, subtree: true });
+  }
 
   function findPageById(id) {
     return pages.find(p => p.id === id && !p.disabled);
@@ -576,23 +649,39 @@
   }
 
   function ensurePrologueDecor() {
-    if (!screen.querySelector('.prologue-tree--1')) {
-      const tree1 = document.createElement('div');
-      tree1.className = 'prologue-illus prologue-tree prologue-tree--1';
-      screen.appendChild(tree1);
-    }
+    if (screen.querySelector('.prologue-tree--1')) return Promise.resolve();
 
-    if (!screen.querySelector('.prologue-tree--2')) {
-      const tree2 = document.createElement('div');
-      tree2.className = 'prologue-illus prologue-tree prologue-tree--2';
-      screen.appendChild(tree2);
-    }
+    const tree1 = document.createElement('div');
+    tree1.className = 'prologue-illus prologue-tree prologue-tree--1';
+    const tree2 = document.createElement('div');
+    tree2.className = 'prologue-illus prologue-tree prologue-tree--2';
+    const house = document.createElement('div');
+    house.className = 'prologue-illus prologue-house';
 
-    if (!screen.querySelector('.prologue-house')) {
-      const house = document.createElement('div');
-      house.className = 'prologue-illus prologue-house';
-      screen.appendChild(house);
-    }
+    return new Promise(function (resolve) {
+      let loaded = 0;
+      let done = false;
+      function finish() {
+        if (done) return;
+        done = true;
+        if (!screen.querySelector('.prologue-tree--1')) {
+          screen.appendChild(tree1);
+          screen.appendChild(tree2);
+          screen.appendChild(house);
+        }
+        resolve();
+      }
+      // Safety: don't block the page forever on slow connections
+      setTimeout(finish, 2000);
+      ['./svg/prologue/tree01.svg', './svg/prologue/tree02.svg', './svg/prologue/house0.svg'].forEach(function (src) {
+        const img = new Image();
+        img.onload = img.onerror = function () {
+          if (++loaded < 3) return;
+          finish();
+        };
+        img.src = src;
+      });
+    });
   }
 
   function syncPrologueTitle(prologuePage) {
@@ -694,13 +783,15 @@
   async function populatePrologueText(prologuePage) {
     textLeft.innerHTML = '';
     textRight.innerHTML = '';
+    textLeft.style.paddingTop = '';
+    textRight.style.paddingTop = '';
     textRight.style.display = '';
     document.body.classList.add('prologue-page');
     document.body.classList.toggle('prologue-opening', Boolean(prologuePage.showTitle));
     if (window.AudioManager && !_audioLayoutPass) AudioManager.setSceneAmbient(null);
 
     syncPrologueTitle(prologuePage);
-    ensurePrologueDecor();
+    await ensurePrologueDecor();
 
     await document.fonts.ready;
     
@@ -799,8 +890,10 @@
     windowVid.loop = true;
     windowVid.muted = true;
     windowVid.playsInline = true;
-    windowVid.preload = 'metadata';
+    windowVid.preload = 'auto';
     windowVid.playbackRate = 0.7;
+    windowVid.style.opacity = '0';
+    windowVid.style.transition = 'opacity 0.7s ease';
 
     const catVid = document.createElement('video');
     catVid.src = './video/chapter1/cat.webm';
@@ -809,8 +902,22 @@
     catVid.loop = true;
     catVid.muted = true;
     catVid.playsInline = true;
-    catVid.preload = 'metadata';
+    catVid.preload = 'auto';
     catVid.style.cursor = 'pointer';
+    catVid.style.opacity = '0';
+    catVid.style.transition = 'opacity 0.7s ease';
+
+    // Fade in both videos together once either is ready (with fallback)
+    let scene9Ready = false;
+    function showScene9Videos() {
+      if (scene9Ready) return;
+      scene9Ready = true;
+      windowVid.style.opacity = '1';
+      catVid.style.opacity = '1';
+    }
+    windowVid.addEventListener('canplay', showScene9Videos, { once: true });
+    catVid.addEventListener('canplay', showScene9Videos, { once: true });
+    setTimeout(showScene9Videos, 3000);
 
     let catClicked = false;
     let catRafId = null;
@@ -870,6 +977,8 @@
 
     textLeft.innerHTML = '';
     textRight.innerHTML = '';
+    textLeft.style.paddingTop = '';
+    textRight.style.paddingTop = '';
     textRight.style.display = '';
     document.body.classList.add('chapter1-page');
     document.body.classList.toggle('chapter1-opening', Boolean(chapterPage.showTitle));
@@ -936,6 +1045,8 @@
   async function populateChapterTwoText(chapterPage, startOverride = null) {
     textLeft.innerHTML = '';
     textRight.innerHTML = '';
+    textLeft.style.paddingTop = '';
+    textRight.style.paddingTop = '';
     textRight.style.display = '';
     document.body.classList.add('chapter2-page');
     document.body.classList.toggle('chapter2-opening', Boolean(chapterPage.showTitle));
@@ -1283,6 +1394,8 @@
   async function populateChapterThreeText(chapterPage, startOverride = null) {
     textLeft.innerHTML = '';
     textRight.innerHTML = '';
+    textLeft.style.paddingTop = '';
+    textRight.style.paddingTop = '';
     textRight.style.display = '';
     document.body.classList.add('chapter3-page');
     document.body.classList.toggle('chapter3-opening', Boolean(chapterPage.showTitle));
@@ -1521,6 +1634,8 @@
   async function populateChapterFourText(chapterPage, startOverride = null) {
     textLeft.innerHTML = '';
     textRight.innerHTML = '';
+    textLeft.style.paddingTop = '';
+    textRight.style.paddingTop = '';
     textRight.style.display = '';
     screen.querySelectorAll('.ch4-decor').forEach(el => el.remove());
     document.body.classList.add('chapter4-page');
@@ -1683,6 +1798,8 @@
   async function populateChapterFiveText(chapterPage, startOverride = null) {
     textLeft.innerHTML = '';
     textRight.innerHTML = '';
+    textLeft.style.paddingTop = '';
+    textRight.style.paddingTop = '';
     textRight.style.display = '';
     document.body.classList.add('chapter5-page');
     document.body.classList.toggle('chapter5-opening', Boolean(chapterPage.showTitle));
@@ -1866,6 +1983,8 @@
   async function populateChapterSixText(chapterPage, startOverride = null) {
     textLeft.innerHTML = '';
     textRight.innerHTML = '';
+    textLeft.style.paddingTop = '';
+    textRight.style.paddingTop = '';
     textRight.style.display = '';
     document.body.classList.add('chapter6-page');
     document.body.classList.toggle('chapter6-opening', Boolean(chapterPage.showTitle));
@@ -2047,6 +2166,8 @@
   async function populateChapterSevenText(chapterPage, startOverride = null) {
     textLeft.innerHTML = '';
     textRight.innerHTML = '';
+    textLeft.style.paddingTop = '';
+    textRight.style.paddingTop = '';
     textRight.style.display = '';
     document.body.classList.add('chapter7-page');
     document.body.classList.toggle('chapter7-opening', Boolean(chapterPage.showTitle));
@@ -2272,6 +2393,8 @@
 
     textLeft.innerHTML = '';
     textRight.innerHTML = '';
+    textLeft.style.paddingTop = '';
+    textRight.style.paddingTop = '';
     textRight.style.display = '';
     document.body.classList.add('chapter8-page');
     document.body.classList.toggle('chapter8-opening', Boolean(chapterPage.showTitle));
@@ -2568,6 +2691,8 @@
 
     textLeft.innerHTML = '';
     textRight.innerHTML = '';
+    textLeft.style.paddingTop = '';
+    textRight.style.paddingTop = '';
     textRight.style.display = '';
     document.body.classList.add('chapter9-page');
     document.body.classList.toggle('chapter9-opening', Boolean(chapterPage.showTitle));
@@ -2712,7 +2837,7 @@
     if (existingTitle) existingTitle.remove();
   }
 
-  const CH10_WORM_PAGES = new Set([74, 75, 76]);
+  const CH10_WORM_PAGES = new Set([75, 76, 77]);
   let wormAnimFrame  = null;
   let wormFadeTimer  = null;
 
@@ -2811,6 +2936,8 @@
   async function populateChapterTenText(chapterPage, startOverride = null) {
     textLeft.innerHTML = '';
     textRight.innerHTML = '';
+    textLeft.style.paddingTop = '';
+    textRight.style.paddingTop = '';
     textRight.style.display = '';
     document.body.classList.add('chapter10-page');
     document.body.classList.toggle('chapter10-opening', Boolean(chapterPage.showTitle));
@@ -2993,6 +3120,8 @@
 
     textLeft.innerHTML = '';
     textRight.innerHTML = '';
+    textLeft.style.paddingTop = '';
+    textRight.style.paddingTop = '';
     textRight.style.display = '';
     document.body.classList.add('chapter11-page');
     document.body.classList.toggle('chapter11-opening', Boolean(chapterPage.showTitle));
@@ -3160,6 +3289,8 @@
   async function populateChapterTwelveText(chapterPage, startOverride = null) {
     textLeft.innerHTML = '';
     textRight.innerHTML = '';
+    textLeft.style.paddingTop = '';
+    textRight.style.paddingTop = '';
     textRight.style.display = '';
     document.body.classList.add('chapter12-page');
     document.body.classList.toggle('chapter12-opening', Boolean(chapterPage.showTitle));
@@ -3413,6 +3544,8 @@
 
     textLeft.innerHTML = '';
     textRight.innerHTML = '';
+    textLeft.style.paddingTop = '';
+    textRight.style.paddingTop = '';
     textRight.style.display = '';
     document.body.classList.add('chapter13-page');
     document.body.classList.toggle('chapter13-opening', Boolean(chapterPage.showTitle));
@@ -3556,8 +3689,7 @@
     const nxtScene13 = nextPage.scene   in ch13DecorMap ? nextPage.scene   : null;
     const isLeavingScene13  = curScene13 && curScene13 !== nxtScene13;
     const isEnteringScene13 = nxtScene13 && nxtScene13 !== curScene13;
-    const needsBgFade = isLeavingScene13 || isEnteringScene13 ||
-                        (!goingForward && !chapter13PageStarts.has(nextPage.id));
+    const needsBgFade = isLeavingScene13 || isEnteringScene13;
 
     if (isLeavingScene13) {
       const decor = screen.querySelector(ch13DecorMap[curScene13]);
@@ -3657,6 +3789,8 @@
 
     textLeft.innerHTML = '';
     textRight.innerHTML = '';
+    textLeft.style.paddingTop = '';
+    textRight.style.paddingTop = '';
     textRight.style.display = '';
     document.body.classList.add('chapter14-page');
     document.body.classList.toggle('chapter14-opening', Boolean(chapterPage.showTitle));
@@ -3812,6 +3946,8 @@
   async function populateChapterFifteenText(chapterPage, startOverride = null) {
     textLeft.innerHTML = '';
     textRight.innerHTML = '';
+    textLeft.style.paddingTop = '';
+    textRight.style.paddingTop = '';
     textRight.style.display = '';
     document.body.classList.add('chapter15-page');
     document.body.classList.toggle('chapter15-opening', Boolean(chapterPage.showTitle));
@@ -3918,6 +4054,8 @@
   async function populateEpilogueText(chapterPage, startOverride = null) {
     textLeft.innerHTML = '';
     textRight.innerHTML = '';
+    textLeft.style.paddingTop = '';
+    textRight.style.paddingTop = '';
     textRight.style.display = '';
     document.body.classList.add('epilogue-page');
     document.body.classList.toggle('epilogue-opening', Boolean(chapterPage.showTitle));
@@ -4031,6 +4169,8 @@
     setTimeout(function () { if (window.GlobalLoader) window.GlobalLoader.hide(); }, 350);
 
   } else if (currentPage.type === 'prologue') {
+    textLeft.style.paddingTop = '';
+    textRight.style.paddingTop = '';
     await populatePrologueText(currentPage);
 
   } else if (currentPage.type === 'birthday' || currentPage.type === 'chapter1' || currentPage.type === 'chapter1-opening') {
@@ -4210,16 +4350,11 @@
     {
       const ch13DecorMap = { 'ch13': '.ch13-decor', 'ch13-2': '.ch13-2-decor', 'ch13-3': '.ch13-3-decor' };
       const sceneKey = currentPage.scene in ch13DecorMap ? currentPage.scene : null;
-      if (sceneKey) {
+      if (sceneKey && isCrossFade) {
+        // On cross-chapter fade-in, the screen fades in from opacity 0
+        // The decor is inside the screen and fades in with it
         const decor = screen.querySelector(ch13DecorMap[sceneKey]);
-        if (decor) {
-          decor.style.opacity = '0';
-          requestAnimationFrame(() => {
-            decor.style.transition = 'opacity 700ms ease';
-            decor.style.opacity = '1';
-            setTimeout(() => { decor.style.transition = ''; }, 740);
-          });
-        }
+        if (decor) decor.style.opacity = '';
       }
     }
 
@@ -4246,6 +4381,18 @@
         });
       }
     }
+
+  } else if (currentPage.type === 'chapter15') {
+    if (!chapter15PageStarts.has(currentPage.id)) {
+      const _first = enabledPages.filter(isChapterFifteenFlowPage).sort((a, b) => a.id - b.id)[0];
+      if (_first && _first.id !== currentPage.id) {
+        await buildPageStartsForward(currentPage.id, isChapterFifteenFlowPage, chapter15PageStarts, populateChapterFifteenText, () => chapter15NextStart);
+      }
+    }
+    const initialStart = chapter15PageStarts.get(currentPage.id) ?? currentPage.bookStart;
+    await populateChapterFifteenText(currentPage, initialStart);
+    chapter15PageStarts.set(currentPage.id, initialStart);
+    saveFlowState();
 
   } else if (currentPage.type === 'epilogue-opening' || currentPage.type === 'epilogue') {
     if (!epiloguePageStarts.has(currentPage.id)) {
@@ -4274,6 +4421,8 @@
     }
 
   } else {
+    textLeft.style.paddingTop = '';
+    textRight.style.paddingTop = '';
     console.warn(`[chapter.js] Unknown page type: "${currentPage.type}" (id=${currentPage.id}). Falling back to raw text split.`);
     textRight.style.display = '';
     const total = currentPage.bookEnd - currentPage.bookStart;
@@ -4285,7 +4434,13 @@
     }
   }
 
-  if (isLoaderActive) {
+  // Always top-align text (no bottom padding)
+  textLeft.style.paddingTop = '';
+  textRight.style.paddingTop = '';
+
+  if (isLoaderActive && currentPage.type !== 'scene') {
+    // For scene pages, _hideSceneLoader() manages chapter-loader based on video readiness.
+    // For non-scene pages, hide chapter-loader now that content is ready.
     const loader = document.querySelector('.chapter-loader');
     if (loader) {
       requestAnimationFrame(() => {
@@ -4301,41 +4456,36 @@
   }
 
   {
+    // Fade in the whole screen at once — bg, text, decorations all appear together.
+    // The screen starts at opacity:0 (CSS). We keep the inline opacity:'1' permanently
+    // so the CSS default doesn't snap it back to 0 after the transition ends.
+    //
+    // crossDecorSel elements (prologue house/trees, chapter titles, ch1 decor) are handled
+    // explicitly via JS transition on every reveal — both initial load and cross-chapter fade.
+    // The CSS animation (prologueFadeIn etc.) is cancelled so the JS transition is the sole
+    // driver. This guarantees they appear in sync with the screen reveal regardless of timing.
     const crossDecorSel = '.prologue-illus, .chapter-prologue-title, .chapter-one-title, .chapter1-decor';
-    if (isCrossFade) {
-      screen.querySelectorAll(crossDecorSel).forEach(el => { el.style.opacity = '0'; });
-    }
+    screen.querySelectorAll(crossDecorSel).forEach(el => {
+      el.style.animation = 'none';  // cancel CSS keyframe; JS transition drives reveal
+      el.style.opacity   = '0';
+    });
 
-    const bg = document.querySelector('.chapter-bg');
     requestAnimationFrame(() => {
-      bg.style.transition = 'opacity 600ms ease';
-      bg.style.opacity = '1';
-      if (isCrossFade) {
-        screen.querySelectorAll(crossDecorSel).forEach(el => {
-          el.style.transition = 'opacity 600ms ease';
-          el.style.opacity = '1';
-        });
-      }
+      screen.style.transition = 'opacity 0.65s ease';
+      screen.style.opacity = '1';
+      screen.querySelectorAll(crossDecorSel).forEach(el => {
+        el.style.transition = 'opacity 600ms ease';
+        el.style.opacity = '1';
+      });
       setTimeout(() => {
-        textLeft.style.transition  = 'opacity 500ms ease';
-        textRight.style.transition = 'opacity 500ms ease';
-        textLeft.style.opacity  = '1';
-        textRight.style.opacity = '1';
-        setTimeout(() => {
-          bg.style.transition        = '';
-          bg.style.opacity           = '';
-          textLeft.style.transition  = '';
-          textLeft.style.opacity     = '';
-          textRight.style.transition = '';
-          textRight.style.opacity    = '';
-          if (isCrossFade) {
-            screen.querySelectorAll(crossDecorSel).forEach(el => {
-              el.style.transition = '';
-              el.style.opacity    = '';
-            });
-          }
-        }, 540);
-      }, 150);
+        screen.style.transition = '';
+        // opacity stays at '1' inline — intentional, overrides CSS opacity:0 rule
+        screen.querySelectorAll(crossDecorSel).forEach(el => {
+          el.style.transition = '';
+          el.style.opacity    = '';
+          // animation:none stays inline → element holds at CSS default (opacity:1)
+        });
+      }, 700);
     });
   }
 
@@ -4421,8 +4571,29 @@
     clickTarget.addEventListener('click', handler);
   }
 
+  function _resetAllTransitioningFlags() {
+    isPrologueTransitioning = false;
+    isChapterOneTransitioning = false;
+    isChapterTwoTransitioning = false;
+    isChapterThreeTransitioning = false;
+    isChapterFourTransitioning = false;
+    isChapterFiveTransitioning = false;
+    isChapterSixTransitioning = false;
+    isChapterSevenTransitioning = false;
+    isChapterEightTransitioning = false;
+    isChapterNineTransitioning = false;
+    isChapterTenTransitioning = false;
+    isChapterElevenTransitioning = false;
+    isChapterTwelveTransitioning = false;
+    isChapterThirteenTransitioning = false;
+    isChapterFourteenTransitioning = false;
+    isChapterFifteenTransitioning = false;
+    isEpilogueTransitioning = false;
+  }
+
   async function crossChapterNavigate(nextPage) {
     const bg = document.querySelector('.chapter-bg');
+    screen.querySelectorAll('video').forEach(v => { try { v.pause(); } catch (_) {} });
     textLeft.style.transition  = 'opacity 300ms ease';
     textRight.style.transition = 'opacity 300ms ease';
     textLeft.style.opacity  = '0';
@@ -4440,6 +4611,12 @@
       _moonDecor.style.transition = 'opacity 600ms ease';
       _moonDecor.style.opacity = '0';
     }
+
+    screen.querySelectorAll('[class*="-decor"], [class*="-wavebg"], [class*="wave-bg"]').forEach(el => {
+      if (el === _moonDecor) return;
+      el.style.transition = 'opacity 300ms ease';
+      el.style.opacity = '0';
+    });
 
     if (currentPage.type === 'scene') {
       const scene  = document.querySelector('.chapter-scene');
@@ -4556,6 +4733,9 @@
     }
 
     await crossChapterNavigate(nextPage);
+    } catch (err) {
+    console.error('[nav] prev error:', err);
+    _resetAllTransitioningFlags();
     } finally { updateNavButtons(); }
   });
 
@@ -4564,10 +4744,9 @@
     const nextPage = findNextPage(currentPage.id);
     if (!nextPage) {
       if (window.AudioManager) {
-        window.AudioManager.fadeMusicOut(450).then(function () { window.location.href = 'index.html'; });
-      } else {
-        window.location.href = 'index.html';
+        window.AudioManager.fadeMusicOut(450);
       }
+      showEndOfBookOverlay(function () { window.location.href = 'index.html'; });
       return;
     }
 
@@ -4657,6 +4836,9 @@
     }
 
     await crossChapterNavigate(nextPage);
+    } catch (err) {
+    console.error('[nav] next error:', err);
+    _resetAllTransitioningFlags();
     } finally { updateNavButtons(); }
   });
 
@@ -4804,6 +4986,29 @@
   document.addEventListener('fullscreenchange', onFullscreenChange);
   document.addEventListener('webkitfullscreenchange', onFullscreenChange);
 })();
+
+function showEndOfBookOverlay(callback) {
+  var overlay = document.createElement('div');
+  overlay.id = 'end-loader';
+  overlay.setAttribute('aria-hidden', 'true');
+  overlay.innerHTML =
+    '<div class="el-text el-text--top">Конец книги.</div>' +
+    '<div class="gl-rings">' +
+      '<div class="gl-ring"></div>' +
+      '<div class="gl-ring"></div>' +
+      '<div class="gl-ring"></div>' +
+    '</div>' +
+    '<div class="el-text el-text--bottom">Вы возвращаетесь на поверхность.</div>';
+  document.documentElement.appendChild(overlay);
+
+  requestAnimationFrame(function () {
+    requestAnimationFrame(function () {
+      overlay.classList.add('el-show');
+    });
+  });
+
+  setTimeout(callback, 2200);
+}
 
 function initWave() {
   const canvas = document.getElementById('wave-canvas');

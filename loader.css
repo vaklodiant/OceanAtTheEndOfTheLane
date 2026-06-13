@@ -57,3 +57,39 @@
   0%   { transform: scale(1);  opacity: 1; }
   100% { transform: scale(28); opacity: 0; }
 }
+
+#end-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  background: linear-gradient(148deg, #9898CC 0%, #6070A8 30%, #4878B2 55%, #5292C6 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.8s ease;
+}
+
+#end-loader.el-show {
+  opacity: 1;
+  pointer-events: all;
+}
+
+#end-loader .el-text {
+  font-family: "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+  font-style: italic;
+  font-size: 0.85rem;
+  letter-spacing: 0.03em;
+  color: rgba(232, 240, 255, 0.85);
+  text-align: center;
+}
+
+#end-loader .el-text--top {
+  margin-bottom: 4.5rem;
+}
+
+#end-loader .el-text--bottom {
+  margin-top: 4.5rem;
+}

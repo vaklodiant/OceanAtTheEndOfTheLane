@@ -7,6 +7,7 @@
 <link rel="stylesheet" href="styles.css">
 <link rel="stylesheet" href="loader.css">
 <script>!function(){var e=document.createElement('div');e.id='global-loader';e.setAttribute('aria-hidden','true');e.innerHTML='<div class="gl-rings"><div class="gl-ring"></div><div class="gl-ring"></div><div class="gl-ring"></div></div>';document.documentElement.appendChild(e)}()</script>
+<script>if (localStorage.getItem('animationEnabled') === 'false') document.documentElement.classList.add('no-animations');</script>
 <style>
 body.contents-page {
   background-size: 120% 120%;
@@ -28,8 +29,8 @@ body.contents-page .bg {
     #DFDFF4 0%,
     #90B0CB 27%,
     #57799A 55%,
-    #4D5579 83%,
-    #1E3956 96%
+    #424b73 83%,
+    #15406e 96%
   );
   filter: brightness(0.72) saturate(1.55);
 }
@@ -96,7 +97,6 @@ body.contents-page.screen.menu-open::after {
   flex: 1;
 }
 
-/* Grid stack: all pages occupy the same cell; crossfade via opacity */
 .carousel-track {
   display: grid;
   width: 100%;
@@ -159,11 +159,12 @@ body.contents-page.screen.menu-open::after {
   clip-path: url(#arch-shape);
   background: radial-gradient(
     ellipse at 42% 38%,
-    #416a82 0%,
-    #3E7292 25%,
-    #254c69 58%,
-    #1C3E5C 100%
+    #4b6a81 0%,
+    #446e93 25%,
+    #0a3468 58%,
+    #132548 100%
   );
+  filter: saturate(1.3);
 }
 
 .arch-bg::before {
@@ -172,14 +173,14 @@ body.contents-page.screen.menu-open::after {
   inset: 0;
   background: conic-gradient(
     from 0deg at 50% 45%,
-    rgba(255,255,255,0.18),
-    rgba(160,205,245,0.14),
-    rgba(0,0,0,0.06),
-    rgba(255,255,255,0.18),
-    rgba(130,190,235,0.14),
-    rgba(0,0,0,0.20),
-    rgba(0,0,0,0.10),
-    rgba(255,255,255,0.18)
+    rgba(80,170,255,0.14),
+    rgba(50,130,220,0.10),
+    rgba(0,20,60,0.12),
+    rgba(60,150,255,0.12),
+    rgba(40,110,200,0.10),
+    rgba(0,10,40,0.22),
+    rgba(0,20,60,0.14),
+    rgba(60,150,255,0.12)
   );
   filter: blur(12px);
   mix-blend-mode: overlay;
@@ -194,6 +195,7 @@ body.contents-page.screen.menu-open::after {
   pointer-events: none;
   clip-path: url(#arch-shape);
   mix-blend-mode: screen;
+  opacity: 0.60;
 }
 
 /* Layer 3 – glass border + shine SVG */
@@ -255,7 +257,7 @@ body.contents-page.screen.menu-open::after {
   z-index: 3;
   background: radial-gradient(
     circle at 35% 28%,
-    rgba(255,255,255,0.42),
+    rgba(120,200,255,0.32),
     transparent 48%
   );
   mix-blend-mode: screen;
@@ -297,8 +299,8 @@ body.contents-page.screen.menu-open::after {
   z-index: 5;
   background: linear-gradient(
     to bottom,
-    rgba(10,35,90,0) 50%,
-    rgba(10,35,90,0.42) 100%
+    rgba(4,14,45,0) 40%,
+    rgba(4,14,45,0.72) 100%
   );
 }
 
@@ -308,8 +310,8 @@ body.contents-page.screen.menu-open::after {
   inset: 0;
   background: linear-gradient(
     to bottom,
-    rgba(10,35,90,0) 50%,
-    rgba(10,35,90,0.28) 100%
+    rgba(4,14,45,0) 40%,
+    rgba(4,14,45,0.3) 100%
   );
   opacity: 0;
   transition: opacity 0.35s ease;
@@ -330,6 +332,9 @@ body.contents-page.screen.menu-open::after {
   pointer-events: none;
   z-index: 7;
   transition: opacity 0.35s ease;
+  filter: brightness(1.22)
+          drop-shadow(0 2px 5px rgba(4, 12, 55, 0.80))
+          drop-shadow(0 4px 10px rgba(8, 20, 80, 0.50));
 }
 
 .arch-card:hover .arch-title-img {
@@ -453,7 +458,7 @@ body.contents-page.screen.menu-open::after {
   <div class="menu-separator"></div>
   <a href="contents.html" class="menu-item">Оглавление</a>
   <div class="menu-separator"></div>
-  <a href="settings.htm" class="menu-item">Настройки</a>
+  <a href="settings.html" class="menu-item">Настройки</a>
   <div class="menu-separator"></div>
   <a href="extra.html" class="menu-item">Дополнительно</a>
 </div>
@@ -509,6 +514,16 @@ const pages = [];
 for (let i = 0; i < CHAPTERS.length; i += PER_PAGE) {
   pages.push(CHAPTERS.slice(i, i + PER_PAGE));
 }
+// Rebalance last page if it has < 3 items (avoids mostly-empty last page),
+// without exceeding PER_PAGE on the page before it.
+if (pages.length > 1 && pages[pages.length - 1].length < 3) {
+  const tail = pages.pop();
+  const prev = pages.pop();
+  const combined = prev.concat(tail);
+  const mid = Math.ceil(combined.length / 2);
+  pages.push(combined.slice(0, mid));
+  pages.push(combined.slice(mid));
+}
 
 const track    = document.getElementById('carouselTrack');
 const dotsEl   = document.getElementById('carouselDots');
@@ -528,10 +543,11 @@ function buildCard(ch) {
       window.AudioManager?.playSound('music/sounds/toggler.mp3');
       const href = `chapter.html?page=${ch.page}`;
       document.body.classList.remove('show');
-      document.body.classList.add('hide');
-      window.GlobalLoader?.show();
+      document.body.classList.add('hide');          // page starts fading out
       window.AudioManager?.fadeMusicOut(650);
-      setTimeout(() => { window.location.href = href; }, 700);
+      // Show loader after 300ms so the fade-out is briefly visible before it's covered
+      setTimeout(() => { window.GlobalLoader?.show(); }, 300);
+      setTimeout(() => { window.location.href = href; }, 750);
     });
   }
   card.innerHTML = `

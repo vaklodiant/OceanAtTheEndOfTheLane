@@ -28,13 +28,24 @@
 
     if (hasIntro) {
         sessionStorage.setItem('introShown', 'true');
-        introScreen.addEventListener('click', function onIntroClick() {
+        let introDismissed = false;
+        function dismissIntro() {
+            if (introDismissed) return;
+            introDismissed = true;
             introScreen.classList.add('fade-out');
             introScreen.addEventListener('transitionend', () => {
                 introScreen.style.display = 'none';
                 startLoader();
             }, { once: true });
-        }, { once: true });
+        }
+        introScreen.addEventListener('click', dismissIntro, { once: true });
+        document.addEventListener('keydown', function onIntroKeydown(e) {
+            if (e.code === 'Space' || e.key === ' ' || e.key === 'Spacebar') {
+                e.preventDefault();
+                document.removeEventListener('keydown', onIntroKeydown);
+                dismissIntro();
+            }
+        });
     } else {
         startLoader();
     }
@@ -48,12 +59,13 @@ function startLoader() {
     function onReady() {
         if (--pending > 0) return;
         loader.classList.add('fade-out');
-        loader.addEventListener('transitionend', () => {
-            loader.style.display = 'none';
-        }, { once: true });
+        setTimeout(function () { loader.style.display = 'none'; }, 700);
         document.querySelector('.screen').classList.add('active');
         document.body.classList.add('show');
         initializeButtonShader();
+        if (document.documentElement.classList.contains('no-animations')) {
+            videos.forEach(function (video) { video.pause(); });
+        }
     }
 
     if (pending === 0) {
@@ -227,7 +239,10 @@ function initializeButtonShader() {
       : Promise.resolve();
 
     audioFadePromise.then(function () {
-      setTimeout(function () { window.location.href = href; }, 200);
+      setTimeout(function () {
+        window.GlobalLoader?.show();
+        setTimeout(function () { window.location.href = href; }, 400);
+      }, 150);
     });
   }
 
