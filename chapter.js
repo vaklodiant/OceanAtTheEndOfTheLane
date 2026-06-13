@@ -3394,8 +3394,38 @@
     if (existingTitle) existingTitle.remove();
   }
 
+  function preloadDecorAssets(imgSrcs, videoSrcs) {
+    const total = imgSrcs.length + videoSrcs.length;
+    if (total === 0) return Promise.resolve();
+    return new Promise(function (resolve) {
+      let loaded = 0;
+      let done = false;
+      function finish() {
+        if (done) return;
+        done = true;
+        resolve();
+      }
+      function tick() {
+        if (++loaded >= total) finish();
+      }
+      setTimeout(finish, 2000);
+      imgSrcs.forEach(function (src) {
+        const img = new Image();
+        img.onload = img.onerror = tick;
+        img.src = src;
+      });
+      videoSrcs.forEach(function (src) {
+        const v = document.createElement('video');
+        v.preload = 'auto';
+        v.muted = true;
+        v.oncanplaythrough = v.onerror = tick;
+        v.src = src;
+      });
+    });
+  }
+
   function ensureChapterThirteenScene2Decor() {
-    if (screen.querySelector('.ch13-2-decor')) return;
+    if (screen.querySelector('.ch13-2-decor')) return Promise.resolve();
 
     const container = document.createElement('div');
     container.className = 'ch13-2-decor';
@@ -3431,11 +3461,17 @@
     group.appendChild(wave2);
     group.appendChild(underwater);
     container.appendChild(group);
-    screen.appendChild(container);
+
+    return preloadDecorAssets(
+      ['./svg/ch13/ch13bg2.svg', './svg/ch13/wavebg1.svg', './svg/ch13/wavebg2.svg'],
+      ['./video/chapter13/underwater.webm']
+    ).then(function () {
+      if (!screen.querySelector('.ch13-2-decor')) screen.appendChild(container);
+    });
   }
 
   function ensureChapterThirteenScene3Decor() {
-    if (screen.querySelector('.ch13-3-decor')) return;
+    if (screen.querySelector('.ch13-3-decor')) return Promise.resolve();
     const container = document.createElement('div');
     container.className = 'ch13-3-decor';
     container.innerHTML = `<svg class="wave-bg" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
@@ -3494,11 +3530,17 @@
     weeds.className = 'waterweeds-bg';
     weeds.innerHTML = '<img src="./svg/waterweeds.svg" alt="" aria-hidden="true">';
     container.appendChild(weeds);
-    screen.appendChild(container);
+
+    return preloadDecorAssets(
+      ['./svg/ch13/scenedecor.svg', './svg/waterweeds.svg'],
+      ['./video/chapter13/lettieandmс.webm']
+    ).then(function () {
+      if (!screen.querySelector('.ch13-3-decor')) screen.appendChild(container);
+    });
   }
 
   function ensureChapterThirteenSceneDecor() {
-    if (screen.querySelector('.ch13-decor')) return;
+    if (screen.querySelector('.ch13-decor')) return Promise.resolve();
 
     const container = document.createElement('div');
     container.className = 'ch13-decor';
@@ -3528,7 +3570,13 @@
     group.appendChild(light);
     group.appendChild(vedro);
     container.appendChild(group);
-    screen.appendChild(container);
+
+    return preloadDecorAssets(
+      ['./svg/ch13/ch13bg.svg', './svg/ch13/ch13light.svg'],
+      ['./video/chapter13/vedro.webm']
+    ).then(function () {
+      if (!screen.querySelector('.ch13-decor')) screen.appendChild(container);
+    });
   }
 
   async function populateChapterThirteenText(chapterPage, startOverride = null) {
@@ -3561,9 +3609,9 @@
         : (isScene2Page || isScene3Page) ? 'music/ambient/underwater.mp3' : null;
       AudioManager.setSceneAmbient(_a13);
     }
-    if (isScenePage) ensureChapterThirteenSceneDecor();
-    if (isScene2Page) ensureChapterThirteenScene2Decor();
-    if (isScene3Page) ensureChapterThirteenScene3Decor();
+    if (isScenePage) await ensureChapterThirteenSceneDecor();
+    if (isScene2Page) await ensureChapterThirteenScene2Decor();
+    if (isScene3Page) await ensureChapterThirteenScene3Decor();
 
     syncChapterThirteenTitle(chapterPage);
 
