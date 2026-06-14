@@ -54,7 +54,8 @@
 function startLoader() {
     const loader = document.querySelector('.loader');
     const videos = Array.from(document.querySelectorAll('video'));
-    let pending = videos.length;
+    const images = Array.from(document.querySelectorAll('img'));
+    let pending = videos.length + images.length;
 
     function onReady() {
         if (--pending > 0) return;
@@ -80,6 +81,22 @@ function startLoader() {
         }
         const fallback = setTimeout(onReady, 4000);
         video.addEventListener('canplaythrough', () => {
+            clearTimeout(fallback);
+            onReady();
+        }, { once: true });
+    });
+
+    images.forEach(img => {
+        if (img.complete && img.naturalWidth > 0) {
+            onReady();
+            return;
+        }
+        const fallback = setTimeout(onReady, 4000);
+        img.addEventListener('load', () => {
+            clearTimeout(fallback);
+            onReady();
+        }, { once: true });
+        img.addEventListener('error', () => {
             clearTimeout(fallback);
             onReady();
         }, { once: true });
